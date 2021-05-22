@@ -3,25 +3,32 @@ package engine
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Calendar
+import Category._
 
 class Tracker() {
   var expenses: List[Expense] = List[Expense]()
   private var budget: Int = -1
+  var currentExpenseId: Int = 0
 
-  private val dateFormat = new SimpleDateFormat("y-MM-d")
+  private val dateFormat = new SimpleDateFormat("yyyy-MM-dd")
 
-  def addExpense(expense: Expense): Unit = {
-    expense match{
-      case Expense(value, null, category, description) => {
-        expenses ::= Expense(value, LocalDate.parse(getCurrentDate), category, description)
-      }
-      case _ => expenses ::= expense
+  def addExpense(amount: Int, date: Any, category: Category=Other, description: String=""): Unit ={
+    var parsedDate: LocalDate = null
+
+    date match {
+      case str: String => parsedDate = LocalDate.parse(str)
+      case localDate: LocalDate => parsedDate = localDate
+      case null => parsedDate = getCurrentDate
     }
+
+    expenses ::= Expense(currentExpenseId, amount, parsedDate, category, description)
+    currentExpenseId += 1
   }
 
-  def getCurrentDate: String = {
+  def getCurrentDate: LocalDate = {
     val now = Calendar.getInstance
-    dateFormat.format(now.getTime)
+    val str = dateFormat.format(now.getTime)
+    LocalDate.parse(str)
   }
 
   def setBudget(_budget: Int): Unit ={
