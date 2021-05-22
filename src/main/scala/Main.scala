@@ -4,12 +4,12 @@ import Category._
 
 object Main extends App{
   val tracker = Tracker()
-  tracker.addExpense("2.78", null, House)
-  tracker.addExpense("500.99", null)
-  tracker.addExpense("0.88", null)
+  tracker.addExpense("2.78", category=House)
+  tracker.addExpense("500.99")
+  tracker.addExpense("0.88")
   println(tracker.expenses)
 
-  println("from date:", tracker.getFromDate("2021-01-11", "2021-02-21"))
+  println(tracker.getFromDate("2021-01-11", "2021-02-21"))
   println(tracker.getTotalExpenseAmount())
   println(tracker.getFromCategory(Other))
 
