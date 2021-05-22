@@ -9,10 +9,9 @@ class Tracker() {
   var expenses: List[Expense] = List[Expense]()
   private var budget: Int = -1
   var currentExpenseId: Int = 0
-
   private val dateFormat = new SimpleDateFormat("yyyy-MM-dd")
 
-  def addExpense(amount: Int, date: Any, category: Category=Other, description: String=""): Unit ={
+  def addExpense(amount: String, date: Any, category: Category=Other, description: String=""): Unit ={
     var parsedDate: LocalDate = null
 
     date match {
@@ -21,8 +20,12 @@ class Tracker() {
       case null => parsedDate = getCurrentDate
     }
 
-    expenses ::= Expense(currentExpenseId, amount, parsedDate, category, description)
+    expenses ::= Expense(currentExpenseId, BigDecimal(amount), parsedDate, category, description)
     currentExpenseId += 1
+  }
+
+  def removeExpense(id: Int): Unit = {
+    expenses = expenses.filterNot(expense => expense.id == id)
   }
 
   def getCurrentDate: LocalDate = {
