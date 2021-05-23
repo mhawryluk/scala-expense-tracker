@@ -15,4 +15,8 @@ object Main extends App{
 
   tracker.removeExpense(1)
   println(tracker.expenses)
+
+  val gui = new MainWindow
+  gui.visible = true
+
 }
