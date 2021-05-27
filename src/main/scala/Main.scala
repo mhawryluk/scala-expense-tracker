@@ -1,17 +1,20 @@
+import engine.ExpenseCategory._
+import engine.IncomeCategory._
 import engine._
 import gui._
-import Category._
 
 object Main extends App{
   val tracker = Tracker()
-  tracker.addExpense("2.78", category=House)
-  tracker.addExpense("500.99")
-  tracker.addExpense("0.88")
+  tracker.addEntry("2.78", category=House)
+  tracker.addEntry("500.99", category=OtherExpense)
+  tracker.addEntry("0.88", category=OtherExpense)
+  tracker.addEntry("500", category=OtherIncome)
   println(tracker.expenses)
+  println(tracker.incomes)
 
-  println(tracker.getFromDate("2021-01-11", "2021-02-21"))
+  println(tracker.getFromDate("2021-01-11", "2021-05-27"))
   println(tracker.getTotalExpenseAmount())
-  println(tracker.getFromCategory(Other))
+  println(tracker.getFromCategory(OtherExpense))
 
   tracker.removeExpense(1)
   println(tracker.expenses)
