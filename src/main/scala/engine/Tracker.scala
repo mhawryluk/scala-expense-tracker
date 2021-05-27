@@ -8,6 +8,8 @@ import java.time.LocalDate
 class Tracker() {
   var expenses: List[Expense] = List[Expense]()
   var incomes: List[Income] = List[Income]()
+  def entries: List[Entry] = List.concat(expenses, incomes).sortBy(entry => entry.date)
+
   private var maxEntryId: Int = 0
   var budget: Int = -1
 
@@ -30,22 +32,24 @@ class Tracker() {
     maxEntryId += 1
   }
 
-  def removeExpense(id: Int): Unit = expenses =
-    expenses.filterNot(expense => expense.id == id)
+  def removeEntry(id: Int): Unit = {
+    expenses = expenses.filterNot(expense => expense.id == id)
+    incomes = incomes.filterNot(income => income.id == id)
+  }
 
-  def getTotalExpenseAmount(expenses: List[Entry] = expenses): BigDecimal =
-    expenses.foldLeft(BigDecimal("0"))(_ + _.amount)
+  def getSum(entries: List[Entry] = entries): BigDecimal =
+    entries.foldLeft(BigDecimal("0"))(_ + _.amount)
 
-  def getFromCategory(category: AnyRef, expenses: List[Entry] = expenses): List[Entry] =
-    expenses.filter(expense => expense.category == category)
+  def getFromCategories(categories: Set[AnyRef], entries: List[Entry] = entries): List[Entry] =
+    entries.filter(entry => categories(entry.category))
 
-  def getFromDate(fromStr: String, toStr: String, expenses: List[Entry] = expenses): List[Entry] = {
+  def getBetweenDates(fromStr: String, toStr: String, entries: List[Entry] = entries): List[Entry] = {
     val from: LocalDate = LocalDate.parse(fromStr)
     val to: LocalDate = LocalDate.parse(toStr)
 
-    expenses.filter(expense => expense.date.isAfter(from)
-      && expense.date.isBefore(to) || expense.date.isEqual(from)
-      || expense.date.isEqual(to))
+    entries.filter(entry => entry.date.isAfter(from)
+      && entry.date.isBefore(to) || entry.date.isEqual(from)
+      || entry.date.isEqual(to))
   }
 }
 
