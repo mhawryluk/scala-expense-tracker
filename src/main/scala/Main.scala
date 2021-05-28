@@ -5,25 +5,25 @@ import engine._
 import gui._
 
 object Main extends App{
-  val tracker = Tracker()
-//  tracker.addEntry("-2.78", category=House)
-//  tracker.addEntry("-500.99", category=OtherExpense)
-//  tracker.addEntry("-0.88", category=OtherExpense)
-//  tracker.addEntry("500", category=Work)
-  println(tracker.expenses)
-  println(tracker.incomes)
-  println(tracker.entries)
+  Tracker.readFromJson()
+//  Tracker.addEntry("-2.78", category=House)
+//  Tracker.addEntry("-500.99", category=OtherExpense)
+//  Tracker.addEntry("-0.88", category=OtherExpense)
+//  Tracker.addEntry("500", category=Work)
+//  println(Tracker.expenses)
+//  println(Tracker.incomes)
+//  println(Tracker.entries)
 
-//  println(tracker.getBetweenDates("2021-01-11", "2021-05-27"))
-//  println(tracker.getSum())
-//  println(tracker.getFromCategories(Set(OtherExpense, OtherIncome)))
+//  println(Tracker.getBetweenDates("2021-01-11", "2021-05-27"))
+//  println(Tracker.getSum())
+//  println(Tracker.getFromCategories(Set(OtherExpense, OtherIncome)))
 
-//  tracker.removeEntry(1)
+//  Tracker.removeEntry(1)
 //  println(tracker.expenses)
 //  println(tracker.incomes)
 //  println(tracker.entries)
 
-//  Tracker.saveToJson(tracker, "data/entries2.json")
+//  Tracker.saveToJson("data/entries2.json")
 
   val gui = new MainWindow
   gui.visible = true

@@ -3,15 +3,15 @@ package engine
 import engine.ExpenseCategory.ExpenseCategory
 import engine.IncomeCategory.IncomeCategory
 
-import java.io.PrintWriter
 import java.time.LocalDate
-import javax.swing.JScrollBar
 import scala.io.Source
 
-class Tracker() {
+object Tracker {
   var expenses: List[Expense] = List[Expense]()
   var incomes: List[Income] = List[Income]()
   def entries: List[Entry] = List.concat(expenses, incomes).sortBy(entry => entry.date)
+
+  val fileName = "data/entries2.json"
 
   private var maxEntryId: Int = 0
   var budget: Int = -1
@@ -31,6 +31,8 @@ class Tracker() {
       case cat: IncomeCategory => incomes ::= Income(maxEntryId, BigDecimal(amount), parsedDate, cat, description)
       case _ => throw new IllegalArgumentException("wrong category type")
     }
+
+    println(entries)
 
     maxEntryId += 1
   }
@@ -54,16 +56,8 @@ class Tracker() {
       && entry.date.isBefore(to) || entry.date.isEqual(from)
       || entry.date.isEqual(to))
   }
-}
 
-object Tracker {
-  def apply(): Tracker = {
-    val tracker = new Tracker()
-    readFromJson("data/entries2.json", tracker)
-    tracker
-  }
-
-  def readFromJson(fileName: String, tracker: Tracker): Unit ={
+  def readFromJson(fileName: String=fileName): Unit ={
     val file = Source.fromFile(fileName)
     try {
       val jsonString = file.getLines.mkString.strip()
@@ -84,14 +78,14 @@ object Tracker {
               case None => throw new IllegalArgumentException("no such category " + categoryString)
           }
         }
-        tracker.addEntry(amount, category, date, description)
+        addEntry(amount, category, date, description)
       }
     }
     finally file.close()
   }
 
-  def saveToJson(tracker: Tracker, fileName: String): Unit = {
-    val entriesList = tracker.entries.map(entry => List(entry.amount.toString, entry.category.toString, entry.date.toString, entry.description))
+  def saveToJson(fileName: String=fileName): Unit = {
+    val entriesList = entries.map(entry => List(entry.amount.toString, entry.category.toString, entry.date.toString, entry.description))
 
     val file = new java.io.PrintWriter(fileName)
     try file.write(ujson.write(entriesList))

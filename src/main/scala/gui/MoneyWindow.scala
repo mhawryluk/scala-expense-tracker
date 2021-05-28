@@ -8,8 +8,6 @@ import java.time.{DateTimeException, LocalDate}
 
 
 sealed class MoneyWindow extends MainFrame{
-  val tracker = Tracker.apply()
-
   preferredSize = new Dimension(400, 320)
   val textField: TextField = new TextField {
     listenTo(keys)
@@ -58,7 +56,7 @@ class ExpenseWindow extends MoneyWindow {
       val year = yearBox.item
       try{
         val date = LocalDate.of(year, month, day)
-        tracker.addEntry(amount, category, date)
+        Tracker.addEntry(amount, category, date)
       }
       catch {
         case e : DateTimeException => println(e.getMessage)
@@ -93,7 +91,7 @@ class IncomeWindow extends MoneyWindow {
       val year = yearBox.item
       try{
         val date = LocalDate.of(year, month, day)
-        tracker.addEntry(amount, category, date)
+        Tracker.addEntry(amount, category, date)
       }
       catch {
         case e : DateTimeException => println(e.getMessage)
