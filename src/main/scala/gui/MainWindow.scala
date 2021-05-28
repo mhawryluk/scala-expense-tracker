@@ -4,7 +4,7 @@ import scala.swing._
 class MainWindow extends MainFrame {
   title = "Expense tracker"
   preferredSize = new Dimension(800, 800)
-  contents = new GridPanel(4,1) {
+  contents = new GridPanel(5,1) {
     contents += new Label("Hello")
     contents += Button("Add expense") {
       println("adding  expense")
@@ -19,6 +19,10 @@ class MainWindow extends MainFrame {
     contents += Button("Show balance and statistics") {
       println("showing balance and statistics")
       // TODO
+    }
+    contents += Button("Show history") {
+      println("showing history of entries")
+      // TODO enable to delete entries
     }
   }
 }
