@@ -3,7 +3,9 @@ package engine
 import engine.ExpenseCategory.ExpenseCategory
 import engine.IncomeCategory.IncomeCategory
 
+import java.io.PrintWriter
 import java.time.LocalDate
+import scala.io.Source
 
 class Tracker() {
   var expenses: List[Expense] = List[Expense]()
@@ -55,6 +57,38 @@ class Tracker() {
 
 object Tracker {
   def apply(): Tracker = {
+//    readFromJson("data/entries2.json")
     new Tracker()
   }
+
+  def readFromJson(fileName: String): Unit ={
+    val file = Source.fromFile(fileName)
+    try {
+      val jsonString = file.getLines.mkString
+      val data = ujson.read(jsonString)
+      for (x <- data.arr){
+        val id: String = x(0).toString.replaceAll("^\"|\"$", "")
+        val amount: String = x(1).toString
+        val categoryString: String = x(2).toString
+        val date: String = x(3).toString
+        val description: String = x(4).toString
+        var category = null
+      }
+    }
+    finally{
+      file.close()
+    }
+  }
+
+  def saveToJson(tracker: Tracker, fileName: String): Unit = {
+    val entriesList = tracker.entries.map(entry => List(entry.id.toString, entry.amount.toString, entry.category.toString, entry.date.toString, entry.description))
+
+    val file = new java.io.PrintWriter(fileName)
+    try {
+        file.write(ujson.write(entriesList))
+    } finally {
+      file.close()
+    }
+  }
+
 }
