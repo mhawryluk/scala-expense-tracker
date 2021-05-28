@@ -5,6 +5,7 @@ import engine.IncomeCategory.IncomeCategory
 
 import java.io.PrintWriter
 import java.time.LocalDate
+import javax.swing.JScrollBar
 import scala.io.Source
 
 class Tracker() {
@@ -57,38 +58,43 @@ class Tracker() {
 
 object Tracker {
   def apply(): Tracker = {
-//    readFromJson("data/entries2.json")
-    new Tracker()
+    val tracker = new Tracker()
+    readFromJson("data/entries2.json", tracker)
+    tracker
   }
 
-  def readFromJson(fileName: String): Unit ={
+  def readFromJson(fileName: String, tracker: Tracker): Unit ={
     val file = Source.fromFile(fileName)
     try {
-      val jsonString = file.getLines.mkString
+      val jsonString = file.getLines.mkString.strip()
+      if (jsonString.isEmpty) return
       val data = ujson.read(jsonString)
       for (x <- data.arr){
-        val id: String = x(0).toString.replaceAll("^\"|\"$", "")
-        val amount: String = x(1).toString
-        val categoryString: String = x(2).toString
-        val date: String = x(3).toString
-        val description: String = x(4).toString
-        var category = null
+        val amount: String = x(0).toString.replaceAll("^\"|\"$", "")
+        val categoryString: String = x(1).toString.replaceAll("^\"|\"$", "")
+        val date: String = x(2).toString.replaceAll("^\"|\"$", "")
+        val description: String = x(3).toString.replaceAll("^\"|\"$", "")
+
+        var category: AnyRef = null
+
+        ExpenseCategory.withNameOpt(categoryString) match {
+          case Some(cat) => category = cat
+          case None => IncomeCategory.withNameOpt(categoryString) match {
+              case Some(cat) => category = cat
+              case None => throw new IllegalArgumentException("no such category " + categoryString)
+          }
+        }
+        tracker.addEntry(amount, category, date, description)
       }
     }
-    finally{
-      file.close()
-    }
+    finally file.close()
   }
 
   def saveToJson(tracker: Tracker, fileName: String): Unit = {
-    val entriesList = tracker.entries.map(entry => List(entry.id.toString, entry.amount.toString, entry.category.toString, entry.date.toString, entry.description))
+    val entriesList = tracker.entries.map(entry => List(entry.amount.toString, entry.category.toString, entry.date.toString, entry.description))
 
     val file = new java.io.PrintWriter(fileName)
-    try {
-        file.write(ujson.write(entriesList))
-    } finally {
-      file.close()
-    }
+    try file.write(ujson.write(entriesList))
+    finally file.close()
   }
-
 }

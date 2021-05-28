@@ -1,12 +1,16 @@
 package engine
 
 
-object ExpenseCategory extends Enumeration {
+sealed trait Category extends Enumeration{
+  def withNameOpt(s: String): Option[Value] = values.find(_.toString == s)
+}
+
+object ExpenseCategory extends Category{
   type ExpenseCategory = Value
   val Food, House, Transportation, Entertainment, Health, OtherExpense = Value
 }
 
-object IncomeCategory extends Enumeration {
+object IncomeCategory extends Category{
   type IncomeCategory = Value
   val Work, Pension, Gift, OtherIncome = Value
 }
