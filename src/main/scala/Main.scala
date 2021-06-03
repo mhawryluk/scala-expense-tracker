@@ -4,6 +4,6 @@ import gui._
 
 object Main extends App{
   Tracker.readFromJson()
-  val gui = new MainWindow
+  val gui = MainWindow
   gui.visible = true
 }

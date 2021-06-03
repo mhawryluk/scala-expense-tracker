@@ -17,14 +17,6 @@ class StatPanel extends GridPanel(7, 2){
   val expenseSum = Tracker.getSum(Tracker.expenses)
   val incomeSum = Tracker.getSum(Tracker.incomes)
 
-  val startDayBox = new ComboBox(1 to 31)
-  val startMonthBox = new ComboBox(1 to 12)
-  val startYearBox = new ComboBox(2000 to 2021)
-
-  val endDayBox = new ComboBox(1 to 31)
-  val endMonthBox = new ComboBox(1 to 12)
-  val endYearBox = new ComboBox(2000 to 2021)
-
   var startDate = LocalDate.of(2000, 1,1)
   var endDate = LocalDate.of(2021, 12, 30)
 
@@ -36,25 +28,6 @@ class StatPanel extends GridPanel(7, 2){
   var incomeList : ListBuffer[String] = ListBuffer()
   var incomeListView = new ListView[String]()
 
-  listenTo(startDayBox.selection)
-  listenTo(startMonthBox.selection)
-  listenTo(startYearBox.selection)
-  listenTo(endDayBox.selection)
-  listenTo(endMonthBox.selection)
-  listenTo(endYearBox.selection)
-
-  reactions += {
-    case SelectionChanged(_) => updateStatistics()
-  }
-
-  contents += new Label("Choose start date: ")
-  contents += new Label("Choose stop date: ")
-  contents += startDayBox
-  contents += endDayBox
-  contents += startMonthBox
-  contents += endMonthBox
-  contents += startYearBox
-  contents += endYearBox
   contents += new Label("Balance: ")
   contents += new Label(balance.toString())
   contents += new Label("Expense statistics: ")
@@ -67,8 +40,7 @@ class StatPanel extends GridPanel(7, 2){
     // TODO update balance
     // TODO update income and expense sum
     println("Update statistics")
-    startDate = LocalDate.of(startYearBox.item, startMonthBox.item, startDayBox.item)
-    endDate = LocalDate.of(endYearBox.item, endMonthBox.item, endDayBox.item)
+
     // TODO check if startDate < endDate with exception
     expenseMap = Statistics.mapExpenses(startDate, endDate)
     updateExpenseList()
@@ -96,4 +68,16 @@ class StatPanel extends GridPanel(7, 2){
       incomeList += entry
     }
   }
+
+  def changeStartDate(date: String): Unit ={
+    startDate = LocalDate.parse(date)
+    updateStatistics()
+  }
+  def changeEndDate(date: String): Unit ={
+    endDate = LocalDate.parse(date)
+    updateStatistics()
+  }
+
+
 }
+

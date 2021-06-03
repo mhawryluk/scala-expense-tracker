@@ -5,7 +5,7 @@ import java.awt.Toolkit
 import scala.swing.BorderPanel.Position.{Center, West}
 import scala.swing._
 
-class MainWindow extends MainFrame {
+object MainWindow extends MainFrame{
   title = "Expense tracker"
   private val width: Int = 1000
   private val height: Int = 800
@@ -15,9 +15,10 @@ class MainWindow extends MainFrame {
   private val screenHeight = Toolkit.getDefaultToolkit.getScreenSize.getHeight
   peer.setLocation(((screenWidth-width)/2).toInt, ((screenHeight-height)/2).toInt)
 
-  val sidePanel = new SidePanel
+  val sidePanel = new SidePanel()
   val historyPanel = new HistoryPanel
   val statPanel = new StatPanel
+  //sidePanel.addObserver(this)
 
   contents = new BorderPanel() {
     val mainPanel: GridPanel = new GridPanel(2, 1){
@@ -34,4 +35,12 @@ class MainWindow extends MainFrame {
     Tracker.saveToJson()
     dispose()
   }
+
+  def changeStartDate(date: String): Unit ={
+    statPanel.changeStartDate(date)
+  }
+  def changeEndDate(date: String): Unit ={
+    statPanel.changeStartDate(date)
+  }
+
 }

@@ -3,7 +3,9 @@ package gui
 import engine.{ExpenseCategory, IncomeCategory}
 
 import java.time.LocalDate
+import scala.swing.event.SelectionChanged
 import scala.swing.{Button, CheckMenuItem, Color, ComboBox, Dimension, FlowPanel, Label}
+
 
 class SidePanel extends FlowPanel{
   preferredSize = new Dimension(200, 800)
@@ -37,9 +39,20 @@ class SidePanel extends FlowPanel{
   val fromDateBox = new ComboBox(allDates)
   val untilDateBox = new ComboBox(allDates)
 
+
   contents += new Label("   from:   ")
   contents += fromDateBox
 
   contents += new Label("    to:       ")
   contents += untilDateBox
+
+  listenTo(fromDateBox.selection)
+  listenTo(untilDateBox.selection)
+
+  reactions += {
+    case SelectionChanged(`fromDateBox`) => MainWindow.changeStartDate(fromDateBox.peer.getSelectedItem.toString)
+    case SelectionChanged(`untilDateBox`) => MainWindow.changeEndDate(untilDateBox.peer.getSelectedItem.toString)
+  }
+
+
 }
