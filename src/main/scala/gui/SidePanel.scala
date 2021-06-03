@@ -2,6 +2,7 @@ package gui
 
 import engine.{ExpenseCategory, IncomeCategory}
 
+import java.time.LocalDate
 import scala.swing.{Button, CheckMenuItem, Color, ComboBox, Dimension, FlowPanel, Label}
 
 class SidePanel extends FlowPanel{
@@ -28,4 +29,17 @@ class SidePanel extends FlowPanel{
 
   val categoryBox = new ComboBox(IncomeCategory.values.toList.concat(ExpenseCategory.values.toList))
   contents += categoryBox
+
+  val beginDate: LocalDate = LocalDate.parse("2000-01-01")
+  val lastDate1: LocalDate = LocalDate.now()
+  val allDates =  beginDate.datesUntil(lastDate1.plusDays(1)).toArray.reverse
+
+  val fromDateBox = new ComboBox(allDates)
+  val untilDateBox = new ComboBox(allDates)
+
+  contents += new Label("   from:   ")
+  contents += fromDateBox
+
+  contents += new Label("    to:       ")
+  contents += untilDateBox
 }

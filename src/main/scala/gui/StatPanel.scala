@@ -1,6 +1,6 @@
 package gui
 
-import engine.{ExpenseCategory, Statistics, Tracker}
+import engine.{Statistics, Tracker}
 
 import java.awt.Color
 import scala.swing.{Dimension, GridPanel, Label}

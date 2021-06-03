@@ -1,10 +1,19 @@
 package gui
+import engine.Tracker
+
+import java.awt.Toolkit
 import scala.swing.BorderPanel.Position.{Center, West}
 import scala.swing._
 
 class MainWindow extends MainFrame {
   title = "Expense tracker"
-  preferredSize = new Dimension(1000, 800)
+  private val width: Int = 1000
+  private val height: Int = 800
+  preferredSize = new Dimension(width, height)
+
+  private val screenWidth = Toolkit.getDefaultToolkit.getScreenSize.getWidth
+  private val screenHeight = Toolkit.getDefaultToolkit.getScreenSize.getHeight
+  peer.setLocation(((screenWidth-width)/2).toInt, ((screenHeight-height)/2).toInt)
 
   val sidePanel = new SidePanel
   val historyPanel = new HistoryPanel
@@ -18,5 +27,11 @@ class MainWindow extends MainFrame {
 
     layout(sidePanel) = West
     layout(mainPanel) = Center
+  }
+
+  override def closeOperation(): Unit = {
+    println("close")
+    Tracker.saveToJson()
+    dispose()
   }
 }

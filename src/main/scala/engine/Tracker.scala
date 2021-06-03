@@ -32,8 +32,7 @@ object Tracker {
       case _ => throw new IllegalArgumentException("wrong category type")
     }
 
-    println(entries)
-
+//    println(entries)
     maxEntryId += 1
   }
 
@@ -90,5 +89,6 @@ object Tracker {
     val file = new java.io.PrintWriter(fileName)
     try file.write(ujson.write(entriesList))
     finally file.close()
+    println("saved to file")
   }
 }
