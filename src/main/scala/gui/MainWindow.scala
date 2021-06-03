@@ -1,30 +1,37 @@
 package gui
+import engine.Tracker
+
+import java.awt.Toolkit
+import scala.swing.BorderPanel.Position.{Center, West}
 import scala.swing._
 
 class MainWindow extends MainFrame {
   title = "Expense tracker"
-  preferredSize = new Dimension(500, 500)
-  contents = new GridPanel(5,1) {
-    contents += new Label("Hello")
-    contents += Button("Add expense") {
-      println("adding  expense")
-      val window = new ExpenseWindow
-      window.visible = true
+  private val width: Int = 1000
+  private val height: Int = 800
+  preferredSize = new Dimension(width, height)
+
+  private val screenWidth = Toolkit.getDefaultToolkit.getScreenSize.getWidth
+  private val screenHeight = Toolkit.getDefaultToolkit.getScreenSize.getHeight
+  peer.setLocation(((screenWidth-width)/2).toInt, ((screenHeight-height)/2).toInt)
+
+  val sidePanel = new SidePanel
+  val historyPanel = new HistoryPanel
+  val statPanel = new StatPanel
+
+  contents = new BorderPanel() {
+    val mainPanel: GridPanel = new GridPanel(2, 1){
+      contents += historyPanel
+      contents += statPanel
     }
-    contents += Button("Add income") {
-      println("adding income")
-      val window = new IncomeWindow
-      window.visible = true
-    }
-    contents += Button("Show balance and statistics") {
-      println("showing balance and statistics")
-      val window = new StatisticWindow
-      window.visible = true
-    }
-    contents += Button("Show history") {
-      println("showing history of entries")
-      val window = new HistoryWindow
-      window.visible = true
-    }
+
+    layout(sidePanel) = West
+    layout(mainPanel) = Center
+  }
+
+  override def closeOperation(): Unit = {
+    println("close")
+    Tracker.saveToJson()
+    dispose()
   }
 }

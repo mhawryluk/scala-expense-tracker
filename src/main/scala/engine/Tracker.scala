@@ -27,13 +27,12 @@ object Tracker {
     }
 
     category match {
-      case cat: ExpenseCategory => expenses ::= Expense(maxEntryId, BigDecimal(amount), parsedDate, cat, description)
+      case cat: ExpenseCategory => expenses ::= Expense(maxEntryId, -BigDecimal(amount), parsedDate, cat, description)
       case cat: IncomeCategory => incomes ::= Income(maxEntryId, BigDecimal(amount), parsedDate, cat, description)
       case _ => throw new IllegalArgumentException("wrong category type")
     }
 
-    println(entries)
-
+//    println(entries)
     maxEntryId += 1
   }
 
@@ -96,5 +95,6 @@ object Tracker {
     val file = new java.io.PrintWriter(fileName)
     try file.write(ujson.write(entriesList))
     finally file.close()
+    println("saved to file")
   }
 }

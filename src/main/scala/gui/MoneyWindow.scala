@@ -28,6 +28,7 @@ sealed class MoneyWindow extends MainFrame{
 
   // TODO move common code up
 
+  override def closeOperation(): Unit = dispose
 }
 
 class ExpenseWindow extends MoneyWindow {
