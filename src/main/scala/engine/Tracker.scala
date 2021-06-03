@@ -27,7 +27,7 @@ object Tracker {
     }
 
     category match {
-      case cat: ExpenseCategory => expenses ::= Expense(maxEntryId, BigDecimal(amount), parsedDate, cat, description)
+      case cat: ExpenseCategory => expenses ::= Expense(maxEntryId, -BigDecimal(amount), parsedDate, cat, description)
       case cat: IncomeCategory => incomes ::= Income(maxEntryId, BigDecimal(amount), parsedDate, cat, description)
       case _ => throw new IllegalArgumentException("wrong category type")
     }

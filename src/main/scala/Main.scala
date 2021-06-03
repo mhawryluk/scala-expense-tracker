@@ -23,7 +23,7 @@ object Main extends App{
 //  println(tracker.incomes)
 //  println(tracker.entries)
 
-//  Tracker.saveToJson("data/entries2.json")
+  Tracker.saveToJson("data/entries2.json")
 
   val gui = new MainWindow
   gui.visible = true
