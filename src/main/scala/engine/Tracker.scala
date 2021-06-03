@@ -57,6 +57,12 @@ object Tracker {
       || entry.date.isEqual(to))
   }
 
+  def getBetweenLocalDates(from: LocalDate, to: LocalDate, entries: List[Entry] = entries): List[Entry] = {
+    entries.filter(entry => entry.date.isAfter(from)
+      && entry.date.isBefore(to) || entry.date.isEqual(from)
+      || entry.date.isEqual(to))
+  }
+
   def readFromJson(fileName: String=fileName): Unit ={
     val file = Source.fromFile(fileName)
     try {
