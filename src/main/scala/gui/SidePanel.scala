@@ -49,6 +49,8 @@ class SidePanel extends FlowPanel{
   listenTo(fromDateBox.selection)
   listenTo(untilDateBox.selection)
 
+  // TODO check if fromDate <= untilDate with exception
+
   reactions += {
     case SelectionChanged(`fromDateBox`) => MainWindow.changeStartDate(fromDateBox.peer.getSelectedItem.toString)
     case SelectionChanged(`untilDateBox`) => MainWindow.changeEndDate(untilDateBox.peer.getSelectedItem.toString)

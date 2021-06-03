@@ -7,15 +7,14 @@ import engine.{Statistics, Tracker}
 import java.awt.Color
 import java.time.LocalDate
 import scala.collection.mutable.ListBuffer
-import scala.swing.event.SelectionChanged
-import scala.swing.{ComboBox, Dimension, GridPanel, Label, ListView}
+import scala.swing.{Dimension, GridPanel, Label, ListView}
 
-class StatPanel extends GridPanel(7, 2){
+class StatPanel extends GridPanel(3, 2){
   background = new Color(0xd6e2e9)
   preferredSize = new Dimension(500, 900)
-  val balance = Tracker.getSum()
-  val expenseSum = Tracker.getSum(Tracker.expenses)
-  val incomeSum = Tracker.getSum(Tracker.incomes)
+  var balance = Tracker.getSum()
+  var expenseSum = Tracker.getSum(Tracker.expenses)
+  var incomeSum = Tracker.getSum(Tracker.incomes)
 
   var startDate = LocalDate.of(2000, 1,1)
   var endDate = LocalDate.of(2021, 12, 30)
@@ -37,20 +36,19 @@ class StatPanel extends GridPanel(7, 2){
 
 
   def updateStatistics(): Unit ={
-    // TODO update balance
-    // TODO update income and expense sum
     println("Update statistics")
 
-    // TODO check if startDate < endDate with exception
+    balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate))
+    expenseSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate,Tracker.expenses))
+    incomeSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate,Tracker.incomes))
+
     expenseMap = Statistics.mapExpenses(startDate, endDate)
     updateExpenseList()
     expenseListView.listData = expenseList
-    println(expenseMap)
 
     incomeMap = Statistics.mapIncomes(startDate, endDate)
     updateIncomeList()
     incomeListView.listData = incomeList
-    println(incomeMap)
   }
 
   def updateExpenseList(): Unit = {
