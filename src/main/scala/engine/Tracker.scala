@@ -32,7 +32,7 @@ object Tracker {
       case _ => throw new IllegalArgumentException("wrong category type")
     }
 
-//    println(entries)
+    println(entries)
     maxEntryId += 1
   }
 

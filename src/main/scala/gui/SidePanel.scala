@@ -16,11 +16,13 @@ class SidePanel extends FlowPanel{
     println("adding  expense")
     val window = new ExpenseWindow
     window.visible = true
+    // TODO update statistics and history
   }
   contents += Button("Add income") {
     println("adding income")
     val window = new IncomeWindow
     window.visible = true
+    // TODO update statistics and history
   }
 
   val incomeCheckButton = new CheckMenuItem("Incomes")

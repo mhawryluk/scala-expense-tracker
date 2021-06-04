@@ -22,17 +22,23 @@ class StatPanel extends GridPanel(3, 2){
   var expenseMap : Map[ExpenseCategory, BigDecimal] = Map()
   var expenseList : ListBuffer[String] = ListBuffer()
   var expenseListView = new ListView[String]()
+  expenseListView.background = new Color(0xd6e2e9)
 
   var incomeMap : Map[IncomeCategory, BigDecimal] = Map()
   var incomeList : ListBuffer[String] = ListBuffer()
   var incomeListView = new ListView[String]()
+  incomeListView.background = new Color(0xd6e2e9)
+
+  val balanceLabel = new Label(balance.toString())
 
   contents += new Label("Balance: ")
-  contents += new Label(balance.toString())
+  contents += balanceLabel
   contents += new Label("Expense statistics: ")
   contents += expenseListView
   contents += new Label("Income statistics: ")
   contents += incomeListView
+
+  // TODO one category statistics
 
 
   def updateStatistics(): Unit ={
@@ -41,6 +47,7 @@ class StatPanel extends GridPanel(3, 2){
     balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate))
     expenseSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate,Tracker.expenses))
     incomeSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate,Tracker.incomes))
+    balanceLabel.text = balance.toString
 
     expenseMap = Statistics.mapExpenses(startDate, endDate)
     updateExpenseList()
