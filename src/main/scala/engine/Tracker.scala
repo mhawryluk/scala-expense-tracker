@@ -31,8 +31,6 @@ object Tracker {
       case cat: IncomeCategory => incomes ::= Income(maxEntryId, BigDecimal(amount), parsedDate, cat, description)
       case _ => throw new IllegalArgumentException("wrong category type")
     }
-
-    println(entries)
     maxEntryId += 1
   }
 

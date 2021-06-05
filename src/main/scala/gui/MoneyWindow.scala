@@ -7,12 +7,12 @@ import scala.swing.{Button, ComboBox, Dimension, GridPanel, Label, MainFrame, Te
 import java.time.{DateTimeException, LocalDate}
 
 
-sealed class MoneyWindow extends MainFrame{
+sealed class MoneyWindow extends MainFrame {
   preferredSize = new Dimension(400, 320)
   val textField: TextField = new TextField {
     listenTo(keys)
     reactions += {
-      case e: KeyTyped => if (!e.char.isDigit) e.consume
+      case e: KeyTyped => if (!e.char.isDigit && e.char != '.') e.consume
     }
   }
   textField.peer.setText("0")
@@ -21,7 +21,7 @@ sealed class MoneyWindow extends MainFrame{
   val monthBox = new ComboBox(1 to 12)
   val yearBox = new ComboBox(2000 to 2021)
 
-  val cancelButton = Button("Cancel"){
+  val cancelButton = Button("Cancel") {
     println("Cancelling")
     close()
   }
@@ -34,7 +34,7 @@ sealed class MoneyWindow extends MainFrame{
 class ExpenseWindow extends MoneyWindow {
   title = "Add expenditure"
   val categoryBox = new ComboBox(ExpenseCategory.values.toList)
-  contents = new GridPanel(6,2) {
+  contents = new GridPanel(6, 2) {
     contents += new Label("Enter expense amount: ")
     contents += textField
     contents += new Label("Choose expense category: ")
@@ -55,12 +55,13 @@ class ExpenseWindow extends MoneyWindow {
       val day = dayBox.item
       val month = monthBox.item
       val year = yearBox.item
-      try{
+      try {
         val date = LocalDate.of(year, month, day)
         Tracker.addEntry(amount, category, date)
+        MainWindow.updateEntries()
       }
       catch {
-        case e : DateTimeException => println(e.getMessage)
+        case e: DateTimeException => println(e.getMessage)
       } finally close()
     }
   }
@@ -69,7 +70,7 @@ class ExpenseWindow extends MoneyWindow {
 class IncomeWindow extends MoneyWindow {
   title = "Add income"
   val categoryBox = new ComboBox(IncomeCategory.values.toList)
-  contents = new GridPanel(6,2) {
+  contents = new GridPanel(6, 2) {
     contents += new Label("Enter income amount: ")
     contents += textField
     contents += new Label("Choose income category: ")
@@ -90,12 +91,13 @@ class IncomeWindow extends MoneyWindow {
       val day = dayBox.item
       val month = monthBox.item
       val year = yearBox.item
-      try{
+      try {
         val date = LocalDate.of(year, month, day)
         Tracker.addEntry(amount, category, date)
+        MainWindow.updateEntries()
       }
       catch {
-        case e : DateTimeException => println(e.getMessage)
+        case e: DateTimeException => println(e.getMessage)
       } finally close()
     }
   }

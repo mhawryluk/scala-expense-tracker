@@ -1,5 +1,5 @@
 package gui
-import engine.Tracker
+import engine.{Category, Tracker}
 
 import java.awt.Toolkit
 import scala.swing.BorderPanel.Position.{Center, West}
@@ -30,6 +30,8 @@ object MainWindow extends MainFrame{
     layout(mainPanel) = Center
   }
 
+  updateEntries()
+
   override def closeOperation(): Unit = {
     println("close")
     Tracker.saveToJson()
@@ -44,6 +46,16 @@ object MainWindow extends MainFrame{
   def changeEndDate(date: String): Unit ={
     statPanel.changeEndDate(date)
     historyPanel.changeEndDate(date)
+  }
+
+  def changeCategory(category: AnyRef): Unit ={
+    statPanel.updateCategory(category)
+    historyPanel.updateCategory(category)
+  }
+
+  def updateEntries(): Unit ={
+    statPanel.updateStatistics()
+    historyPanel.updateHistory()
   }
 
 }

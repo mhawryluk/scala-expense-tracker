@@ -14,3 +14,8 @@ object IncomeCategory extends Category{
   type IncomeCategory = Value
   val Work, Pension, Gift, OtherIncome = Value
 }
+
+object AllCategory extends Category{
+  type AllCategory = Value
+  val All = Value
+}
