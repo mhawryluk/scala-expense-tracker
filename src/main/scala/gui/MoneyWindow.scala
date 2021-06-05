@@ -7,7 +7,7 @@ import scala.swing.{Button, ComboBox, Dimension, GridPanel, Label, MainFrame, Te
 import java.time.{DateTimeException, LocalDate}
 
 
-sealed class MoneyWindow extends MainFrame {
+class MoneyWindow extends MainFrame {
   preferredSize = new Dimension(400, 320)
   val textField: TextField = new TextField {
     listenTo(keys)
@@ -16,90 +16,58 @@ sealed class MoneyWindow extends MainFrame {
     }
   }
   textField.peer.setText("0")
-
-  val dayBox = new ComboBox(1 to 31)
-  val monthBox = new ComboBox(1 to 12)
-  val yearBox = new ComboBox(2000 to 2021)
+  val descriptionField: TextField = new TextField("")
+  val beginDate: LocalDate = LocalDate.parse("2000-01-01")
+  val lastDate1: LocalDate = LocalDate.now()
+  val allDates: Array[AnyRef] = beginDate.datesUntil(lastDate1.plusDays(1)).toArray.reverse
+  val dateBox = new ComboBox(allDates)
+  val categoryBox: ComboBox[AnyRef] = new ComboBox(List(""))
 
   val cancelButton = Button("Cancel") {
     println("Cancelling")
     close()
   }
 
-  // TODO move common code up
+  def addContents(catBox: ComboBox[AnyRef]): Unit = {
+    contents = new GridPanel(5, 2) {
+      contents += new Label("Enter amount: ")
+      contents += textField
+      contents += new Label("Choose category: ")
+      contents += catBox
+      contents += new Label("Choose date: ")
+      contents += dateBox
+      contents += new Label("Enter description")
+      contents += descriptionField
+      contents += cancelButton
+      contents += Button("Accept and close") {
+        val amount = textField.text
+        textField.peer.setText("0")
+        val category = catBox.peer.getSelectedItem
+        try {
+          val date = LocalDate.parse(dateBox.peer.getSelectedItem.toString)
+          val description = descriptionField.text
+          Tracker.addEntry(amount, category, date)
+          MainWindow.updateEntries()
+        }
+        catch {
+          case e: DateTimeException => println(e.getMessage)
+        } finally close()
+      }
+    }
+  }
 
   override def closeOperation(): Unit = dispose
 }
 
 class ExpenseWindow extends MoneyWindow {
   title = "Add expenditure"
-  val categoryBox = new ComboBox(ExpenseCategory.values.toList)
-  contents = new GridPanel(6, 2) {
-    contents += new Label("Enter expense amount: ")
-    contents += textField
-    contents += new Label("Choose expense category: ")
-    contents += categoryBox
-    contents += new Label("Choose date [day]: ")
-    contents += dayBox
-    contents += new Label("Choose date [month]: ")
-    contents += monthBox
-    contents += new Label("Choose date [year]: ")
-    contents += yearBox
-    contents += cancelButton
-    contents += Button("Accept and close") {
-      println("Accepting and closing ExpenseWindow")
-      val amount = textField.text
-      textField.peer.setText("0")
-      val category = categoryBox.peer.getSelectedItem
-
-      val day = dayBox.item
-      val month = monthBox.item
-      val year = yearBox.item
-      try {
-        val date = LocalDate.of(year, month, day)
-        Tracker.addEntry(amount, category, date)
-        MainWindow.updateEntries()
-      }
-      catch {
-        case e: DateTimeException => println(e.getMessage)
-      } finally close()
-    }
-  }
+  override val categoryBox = new ComboBox(ExpenseCategory.values.toList)
+  addContents(categoryBox)
 }
 
 class IncomeWindow extends MoneyWindow {
   title = "Add income"
-  val categoryBox = new ComboBox(IncomeCategory.values.toList)
-  contents = new GridPanel(6, 2) {
-    contents += new Label("Enter income amount: ")
-    contents += textField
-    contents += new Label("Choose income category: ")
-    contents += categoryBox
-    contents += new Label("Choose date [day]: ")
-    contents += dayBox
-    contents += new Label("Choose date [month]: ")
-    contents += monthBox
-    contents += new Label("Choose date [year]: ")
-    contents += yearBox
-    contents += cancelButton
-    contents += Button("Accept and close") {
-      println("Accepting and closing IncomeWindow")
-      val amount = textField.text
-      textField.peer.setText("0")
-      val category = categoryBox.peer.getSelectedItem
-
-      val day = dayBox.item
-      val month = monthBox.item
-      val year = yearBox.item
-      try {
-        val date = LocalDate.of(year, month, day)
-        Tracker.addEntry(amount, category, date)
-        MainWindow.updateEntries()
-      }
-      catch {
-        case e: DateTimeException => println(e.getMessage)
-      } finally close()
-    }
-  }
+  override val categoryBox = new ComboBox(IncomeCategory.values.toList)
+  addContents(categoryBox)
 }
 

@@ -25,6 +25,7 @@ class SidePanel extends FlowPanel {
 
   val incomeCheckButton = new CheckMenuItem("Incomes")
   val expenseCheckButton = new CheckMenuItem("Expenses")
+  // TODO add functions for check buttons
 
   contents += incomeCheckButton
   contents += expenseCheckButton

@@ -73,8 +73,7 @@ class HistoryPanel extends BoxPanel(Orientation.Vertical) {
         Tracker.removeEntry(id)
       }
     }
-    updateHistory()
-    // TODO po naciśnieciu buttona nie uaktualnia się historia
+    MainWindow.updateEntries()
   }
 
   def updateCategory(cat: AnyRef): Unit = {
