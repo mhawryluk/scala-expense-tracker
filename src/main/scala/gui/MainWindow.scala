@@ -8,6 +8,7 @@ import scala.sys.exit
 
 object MainWindow extends MainFrame{
   title = "Expense tracker"
+
   private val width: Int = 1000
   private val height: Int = 800
   preferredSize = new Dimension(width, height)

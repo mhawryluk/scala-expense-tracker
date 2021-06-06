@@ -10,8 +10,6 @@ import scala.swing.event.ButtonClicked
 import scala.swing.{BoxPanel, Button, CheckMenuItem, Color, Dimension, Label, Orientation}
 
 class HistoryPanel extends BoxPanel(Orientation.Vertical) {
-  val historyLabel = new Label("HistoryPanel")
-  contents += historyLabel
   preferredSize = new Dimension(300, 250)
   background = new Color(0xf0efeb)
 
@@ -30,7 +28,6 @@ class HistoryPanel extends BoxPanel(Orientation.Vertical) {
 
   def updateContents(): Unit = {
     contents.clear()
-    contents += historyLabel
     for (item <- checkItems) {
       contents += item
     }

@@ -4,13 +4,12 @@ import engine.{AllCategory, ExpenseCategory, IncomeCategory}
 
 import java.time.LocalDate
 import scala.swing.event.SelectionChanged
-import scala.swing.{Button, CheckMenuItem, Color, ComboBox, Dimension, FlowPanel, Label}
+import scala.swing.{Button, CheckMenuItem, Color, ComboBox, Dimension, FlowPanel, GridPanel, Label}
 
 
 class SidePanel extends FlowPanel {
   preferredSize = new Dimension(200, 800)
   background = new Color(0x99c1de)
-  contents += new Label("SidePanel")
 
   contents += Button("Add expense") {
     println("adding  expense")
@@ -25,14 +24,25 @@ class SidePanel extends FlowPanel {
 
   val incomeCheckButton = new CheckMenuItem("Incomes")
   val expenseCheckButton = new CheckMenuItem("Expenses")
+
+  contents += new GridPanel(2, 1) {
+    contents += incomeCheckButton
+    contents += expenseCheckButton
+  }
   // TODO add functions for check buttons
 
-  contents += incomeCheckButton
-  contents += expenseCheckButton
 
-  val categoryBox = new ComboBox(AllCategory.values.toList.concat(ExpenseCategory.values.toList).concat(IncomeCategory.values.toList))
-  contents += categoryBox
+  // choosing category boxes
+  private val categoryPairs: Seq[(String, CheckMenuItem)] = for (category <- IncomeCategory.values.toList concat ExpenseCategory.values.toList) yield (category.toString, new CheckMenuItem(category.toString))
+  val ChooseCategoryMap: Map[String, CheckMenuItem] = Map(categoryPairs :_*)
 
+  contents += new GridPanel(categoryPairs.size, 1) {
+    for ((name, box) <- ChooseCategoryMap) {
+      contents += box
+    }
+  }
+
+  // choosing tracking period
   val beginDate: LocalDate = LocalDate.parse("2000-01-01")
   val lastDate1: LocalDate = LocalDate.now()
   val allDates: Array[AnyRef] = beginDate.datesUntil(lastDate1.plusDays(1)).toArray.reverse
@@ -40,12 +50,14 @@ class SidePanel extends FlowPanel {
   val fromDateBox = new ComboBox(allDates)
   val untilDateBox = new ComboBox(allDates)
 
-
-  contents += new Label("   from:   ")
+  contents += new Label("     from:    ")
   contents += fromDateBox
 
-  contents += new Label("    to:       ")
+  contents += new Label("       to:       ")
   contents += untilDateBox
+
+  val categoryBox = new ComboBox(AllCategory.values.toList.concat(ExpenseCategory.values.toList).concat(IncomeCategory.values.toList))
+  contents += categoryBox
 
   listenTo(fromDateBox.selection)
   listenTo(untilDateBox.selection)
@@ -65,8 +77,7 @@ class SidePanel extends FlowPanel {
     if (LocalDate.parse(fromDateBox.peer.getSelectedItem.toString).isAfter(LocalDate.parse(untilDateBox.peer.getSelectedItem.toString))) {
       fromDateBox.peer.setSelectedItem(untilDateBox.peer.getSelectedItem)
     }
-
   }
 
-
+  repaint()
 }
