@@ -80,4 +80,9 @@ class HistoryPanel extends BoxPanel(Orientation.Vertical) {
     else categories += cat
     updateHistory()
   }
+
+  def setCategories(categories: Set[AnyRef]): Unit = {
+    this.categories = categories
+    updateHistory()
+  }
 }

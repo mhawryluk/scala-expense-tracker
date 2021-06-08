@@ -1,6 +1,8 @@
 package gui
 
-import engine.{AllCategory, ExpenseCategory, IncomeCategory}
+import engine.{ExpenseCategory, IncomeCategory}
+import engine.ExpenseCategory.ExpenseCategory
+import engine.IncomeCategory.IncomeCategory
 
 import java.time.LocalDate
 import scala.swing.event.{ButtonClicked, SelectionChanged}
@@ -11,40 +13,67 @@ class SidePanel extends FlowPanel {
   preferredSize = new Dimension(200, 800)
   background = new Color(0x99c1de)
 
-  contents += Button("Add expense") {
-    println("adding  expense")
-    val window = new ExpenseWindow
-    window.visible = true
+  contents += new GridPanel(2, 1){
+    contents += Button("Add expense") {
+      println("adding  expense")
+      val window = new ExpenseWindow
+      window.visible = true
+    }
+    contents += Button("Add income") {
+      println("adding income")
+      val window = new IncomeWindow
+      window.visible = true
+    }
   }
-  contents += Button("Add income") {
-    println("adding income")
-    val window = new IncomeWindow
-    window.visible = true
-  }
-
-  val incomeCheckButton = new CheckMenuItem("Incomes")
-  val expenseCheckButton = new CheckMenuItem("Expenses")
-
-  contents += new GridPanel(2, 1) {
-    contents += incomeCheckButton
-    contents += expenseCheckButton
-  }
-  // TODO add functions for check buttons
-
 
   // choosing category boxes
-  private val categoryPairs: Seq[(String, CheckMenuItem)] =
+  private val categoryBoxes: Seq[(AnyRef, CheckMenuItem)] =
     for (category <- IncomeCategory.values.toList concat ExpenseCategory.values.toList)
-      yield (category.toString, new CheckMenuItem(category.toString){
+      yield (category, new CheckMenuItem(category.toString){
         listenTo(this)
         reactions += {
           case ButtonClicked(_) => MainWindow.selectCategory(category)
         }
       })
-  val ChooseCategoryMap: Map[String, CheckMenuItem] = Map(categoryPairs :_*)
 
-  contents += new GridPanel(categoryPairs.size, 1) {
-    for ((name, box) <- ChooseCategoryMap) contents += box
+  val ChooseCategoryMap: Map[AnyRef, CheckMenuItem] = Map(categoryBoxes :_*)
+
+  // entry type buttons
+  contents += new GridPanel(categoryBoxes.size, 1) {
+    for ((category, box) <- ChooseCategoryMap) contents += box
+  }
+
+  contents += new GridPanel(4, 0) {
+    contents += Button("All entries"){
+      MainWindow.setCategories((ExpenseCategory.values concat IncomeCategory.values).toSet)
+      for ((category, box) <- categoryBoxes){
+        box.selected = true
+      }
+    }
+    contents += Button("All incomes"){
+      MainWindow.setCategories(IncomeCategory.values.toSet)
+      for ((category, box) <- categoryBoxes){
+        category match {
+          case cat: IncomeCategory => box.selected = true
+          case _ => box.selected = false
+        }
+      }
+    }
+    contents += Button("All expenses"){
+      MainWindow.setCategories(ExpenseCategory.values.toSet)
+      for ((category, box) <- categoryBoxes){
+        category match {
+          case cat: ExpenseCategory => box.selected = true
+          case _ => box.selected = false
+        }
+      }
+    }
+    contents += Button("Clear entries"){
+      MainWindow.setCategories(Set())
+      for ((category, box) <- categoryBoxes){
+        box.selected = false
+      }
+    }
   }
 
   // choosing tracking period

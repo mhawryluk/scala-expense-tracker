@@ -54,9 +54,13 @@ object MainWindow extends MainFrame{
     historyPanel.updateCategory(category)
   }
 
+  def setCategories(categories: Set[AnyRef]): Unit = {
+    historyPanel.setCategories(categories)
+    statPanel.setCategories(categories)
+  }
+
   def updateEntries(): Unit ={
     statPanel.updateStatistics()
     historyPanel.updateHistory()
   }
-
 }

@@ -17,7 +17,7 @@ class StatPanel extends GridPanel(3, 2) {
   private var expenseSum = Tracker.getSum(Tracker.expenses)
   private var incomeSum = Tracker.getSum(Tracker.incomes)
 
-  private var startDate = LocalDate.of(2000, 1, 1)
+  private var startDate = LocalDate.now()
   private var endDate = LocalDate.now
 
   var expenseMap: Map[ExpenseCategory, BigDecimal] = Map()
@@ -89,6 +89,11 @@ class StatPanel extends GridPanel(3, 2) {
     if (categories contains cat) categories -= cat
     else categories += cat
 
+    updateStatistics()
+  }
+
+  def setCategories(categories: Set[AnyRef]): Unit = {
+    this.categories = categories
     updateStatistics()
   }
 }
