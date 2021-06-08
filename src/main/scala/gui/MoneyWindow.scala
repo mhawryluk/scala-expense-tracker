@@ -2,9 +2,9 @@ package gui
 
 import engine.{ExpenseCategory, IncomeCategory, Tracker}
 
-import scala.swing.event.KeyTyped
-import scala.swing.{Button, ComboBox, Dimension, GridPanel, Label, MainFrame, TextField}
 import java.time.{DateTimeException, LocalDate}
+import scala.swing.event.KeyTyped
+import scala.swing._
 
 
 class MoneyWindow extends MainFrame {

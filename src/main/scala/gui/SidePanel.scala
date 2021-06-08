@@ -1,19 +1,20 @@
 package gui
 
-import engine.{ExpenseCategory, IncomeCategory}
 import engine.ExpenseCategory.ExpenseCategory
 import engine.IncomeCategory.IncomeCategory
+import engine.{ExpenseCategory, IncomeCategory}
 
 import java.time.LocalDate
 import scala.swing.event.{ButtonClicked, SelectionChanged}
-import scala.swing.{Button, CheckMenuItem, Color, ComboBox, Dimension, FlowPanel, GridPanel, Label}
+import scala.swing._
 
 
 class SidePanel extends FlowPanel {
   preferredSize = new Dimension(200, 800)
   background = new Color(0x99c1de)
 
-  contents += new GridPanel(2, 1){
+  // adding entries buttons
+  contents += new GridPanel(2, 1) {
     contents += Button("Add expense") {
       println("adding  expense")
       val window = new ExpenseWindow
@@ -29,66 +30,70 @@ class SidePanel extends FlowPanel {
   // choosing category boxes
   private val categoryBoxes: Seq[(AnyRef, CheckMenuItem)] =
     for (category <- IncomeCategory.values.toList concat ExpenseCategory.values.toList)
-      yield (category, new CheckMenuItem(category.toString){
+      yield (category, new CheckMenuItem(category.toString) {
         listenTo(this)
         reactions += {
           case ButtonClicked(_) => MainWindow.selectCategory(category)
         }
       })
 
-  val ChooseCategoryMap: Map[AnyRef, CheckMenuItem] = Map(categoryBoxes :_*)
+  val ChooseCategoryMap: Map[AnyRef, CheckMenuItem] = Map(categoryBoxes: _*)
 
   // entry type buttons
   contents += new GridPanel(categoryBoxes.size, 1) {
-    for ((category, box) <- ChooseCategoryMap) contents += box
+    for ((_, box) <- ChooseCategoryMap) contents += box
   }
 
   contents += new GridPanel(4, 0) {
-    contents += Button("All entries"){
+    contents += Button("All entries") {
       MainWindow.setCategories((ExpenseCategory.values concat IncomeCategory.values).toSet)
-      for ((category, box) <- categoryBoxes){
+      for ((_, box) <- categoryBoxes) {
         box.selected = true
       }
     }
-    contents += Button("All incomes"){
+    contents += Button("All incomes") {
       MainWindow.setCategories(IncomeCategory.values.toSet)
-      for ((category, box) <- categoryBoxes){
+      for ((category, box) <- categoryBoxes) {
         category match {
-          case cat: IncomeCategory => box.selected = true
+          case _: IncomeCategory => box.selected = true
           case _ => box.selected = false
         }
       }
     }
-    contents += Button("All expenses"){
+    contents += Button("All expenses") {
       MainWindow.setCategories(ExpenseCategory.values.toSet)
-      for ((category, box) <- categoryBoxes){
+      for ((category, box) <- categoryBoxes) {
         category match {
-          case cat: ExpenseCategory => box.selected = true
+          case _: ExpenseCategory => box.selected = true
           case _ => box.selected = false
         }
       }
     }
-    contents += Button("Clear entries"){
+    contents += Button("Clear entries") {
       MainWindow.setCategories(Set())
-      for ((category, box) <- categoryBoxes){
+      for ((_, box) <- categoryBoxes) {
         box.selected = false
       }
     }
   }
 
   // choosing tracking period
-  val beginDate: LocalDate = LocalDate.parse("2000-01-01")
+  val beginDate: LocalDate = LocalDate.parse("2010-01-01")
   val lastDate1: LocalDate = LocalDate.now()
   val allDates: Array[AnyRef] = beginDate.datesUntil(lastDate1.plusDays(1)).toArray.reverse
 
   val fromDateBox = new ComboBox(allDates)
   val untilDateBox = new ComboBox(allDates)
 
-  contents += new Label("     from:    ")
-  contents += fromDateBox
+  contents += new GridPanel(0, 2) {
+    contents += new Label("from:")
+    contents += fromDateBox
+  }
 
-  contents += new Label("       to:       ")
-  contents += untilDateBox
+  contents += new GridPanel(0, 2) {
+    contents += new Label("to:")
+    contents += untilDateBox
+  }
 
   listenTo(fromDateBox.selection)
   listenTo(untilDateBox.selection)
@@ -107,5 +112,4 @@ class SidePanel extends FlowPanel {
       fromDateBox.peer.setSelectedItem(untilDateBox.peer.getSelectedItem)
     }
   }
-  peer.repaint()
 }

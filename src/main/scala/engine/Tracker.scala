@@ -9,6 +9,7 @@ import scala.io.Source
 object Tracker {
   var expenses: List[Expense] = List[Expense]()
   var incomes: List[Income] = List[Income]()
+
   def entries: List[Entry] = List.concat(expenses, incomes).sortBy(entry => entry.date)
 
   val fileName = "data/entries2.json"
@@ -58,13 +59,13 @@ object Tracker {
       || entry.date.isEqual(to))
   }
 
-  def readFromJson(fileName: String=fileName): Unit ={
+  def readFromJson(fileName: String = fileName): Unit = {
     val file = Source.fromFile(fileName)
     try {
       val jsonString = file.getLines.mkString.strip()
       if (jsonString.isEmpty) return
       val data = ujson.read(jsonString)
-      for (x <- data.arr){
+      for (x <- data.arr) {
         val amount: String = x(0).toString.replaceAll("^\"|\"$", "")
         val categoryString: String = x(1).toString.replaceAll("^\"|\"$", "")
         val date: String = x(2).toString.replaceAll("^\"|\"$", "")
@@ -75,8 +76,8 @@ object Tracker {
         ExpenseCategory.withNameOpt(categoryString) match {
           case Some(cat) => category = cat
           case None => IncomeCategory.withNameOpt(categoryString) match {
-              case Some(cat) => category = cat
-              case None => throw new IllegalArgumentException("no such category " + categoryString)
+            case Some(cat) => category = cat
+            case None => throw new IllegalArgumentException("no such category " + categoryString)
           }
         }
         addEntry(amount, category, date, description)
@@ -85,7 +86,7 @@ object Tracker {
     finally file.close()
   }
 
-  def saveToJson(fileName: String=fileName): Unit = {
+  def saveToJson(fileName: String = fileName): Unit = {
     val entriesList = entries.map(entry => List(entry.amount.toString, entry.category.toString, entry.date.toString, entry.description))
 
     val file = new java.io.PrintWriter(fileName)

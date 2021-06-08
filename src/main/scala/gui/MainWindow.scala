@@ -1,12 +1,13 @@
 package gui
-import engine.{Category, Tracker}
+
+import engine.Tracker
 
 import java.awt.Toolkit
 import scala.swing.BorderPanel.Position.{Center, West}
 import scala.swing._
 import scala.sys.exit
 
-object MainWindow extends MainFrame{
+object MainWindow extends MainFrame {
   title = "Expense tracker"
 
   private val width: Int = 1000
@@ -15,14 +16,14 @@ object MainWindow extends MainFrame{
 
   private val screenWidth = Toolkit.getDefaultToolkit.getScreenSize.getWidth
   private val screenHeight = Toolkit.getDefaultToolkit.getScreenSize.getHeight
-  peer.setLocation(((screenWidth-width)/2).toInt, ((screenHeight-height)/2).toInt)
+  peer.setLocation(((screenWidth - width) / 2).toInt, ((screenHeight - height) / 2).toInt)
 
   val sidePanel = new SidePanel
   val historyPanel = new HistoryPanel
   val statPanel = new StatPanel
 
   contents = new BorderPanel() {
-    val mainPanel: GridPanel = new GridPanel(2, 1){
+    val mainPanel: GridPanel = new GridPanel(2, 1) {
       contents += historyPanel
       contents += statPanel
     }
@@ -40,16 +41,17 @@ object MainWindow extends MainFrame{
     exit(0)
   }
 
-  def changeStartDate(date: String): Unit ={
+  def changeStartDate(date: String): Unit = {
     statPanel.changeStartDate(date)
     historyPanel.changeStartDate(date)
   }
-  def changeEndDate(date: String): Unit ={
+
+  def changeEndDate(date: String): Unit = {
     statPanel.changeEndDate(date)
     historyPanel.changeEndDate(date)
   }
 
-  def selectCategory(category: AnyRef): Unit ={
+  def selectCategory(category: AnyRef): Unit = {
     statPanel.updateCategory(category)
     historyPanel.updateCategory(category)
   }
@@ -59,8 +61,8 @@ object MainWindow extends MainFrame{
     statPanel.setCategories(categories)
   }
 
-  def updateEntries(): Unit ={
-    statPanel.updateStatistics()
-    historyPanel.updateHistory()
+  def updateEntries(): Unit = {
+    statPanel.update()
+    historyPanel.update()
   }
 }

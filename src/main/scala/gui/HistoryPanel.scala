@@ -1,21 +1,16 @@
 package gui
 
-import engine.AllCategory.All
 import engine.{Entry, Tracker}
 
-import java.time.LocalDate
 import scala.collection.mutable
-import scala.collection.mutable.{ListBuffer, Map}
+import scala.collection.mutable.ListBuffer
 import scala.swing.event.ButtonClicked
-import scala.swing.{Alignment, BoxPanel, Button, CheckMenuItem, Color, Dimension, GridPanel, Label, Orientation, Table}
+import scala.swing._
 
-class HistoryPanel extends BoxPanel(Orientation.Vertical) {
+class HistoryPanel extends BoxPanel(Orientation.Vertical) with EntryPanel {
   preferredSize = new Dimension(300, 250)
   background = new Color(0xf0efeb)
 
-  var categories: Set[AnyRef] = Set()
-  var startDate: LocalDate = LocalDate.now()
-  var endDate: LocalDate = LocalDate.now()
   var entries: List[Entry] = Tracker.getBetweenLocalDates(startDate, endDate)
   var entryMap: mutable.Map[CheckMenuItem, Int] = mutable.Map()
   var checkItems: ListBuffer[CheckMenuItem] = ListBuffer()
@@ -47,20 +42,9 @@ class HistoryPanel extends BoxPanel(Orientation.Vertical) {
     updateContents()
   }
 
-  def updateHistory(): Unit = {
-    if (!(categories contains All)) entries = Tracker.getBetweenLocalDates(startDate, endDate, Tracker.getFromCategories(categories))
-    else entries = Tracker.getBetweenLocalDates(startDate, endDate)
+  def update(): Unit = {
+    entries = Tracker.getBetweenLocalDates(startDate, endDate, Tracker.getFromCategories(categories))
     updateItems()
-  }
-
-  def changeStartDate(date: String): Unit = {
-    startDate = LocalDate.parse(date)
-    updateHistory()
-  }
-
-  def changeEndDate(date: String): Unit = {
-    endDate = LocalDate.parse(date)
-    updateHistory()
   }
 
   def deleteChosen(): Unit = {
@@ -73,16 +57,5 @@ class HistoryPanel extends BoxPanel(Orientation.Vertical) {
       }
     }
     MainWindow.updateEntries()
-  }
-
-  def updateCategory(cat: AnyRef): Unit = {
-    if (categories contains cat) categories -= cat
-    else categories += cat
-    updateHistory()
-  }
-
-  def setCategories(categories: Set[AnyRef]): Unit = {
-    this.categories = categories
-    updateHistory()
   }
 }

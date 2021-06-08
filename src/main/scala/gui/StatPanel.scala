@@ -1,24 +1,19 @@
 package gui
 
-import engine.AllCategory.All
 import engine.ExpenseCategory.ExpenseCategory
 import engine.IncomeCategory.IncomeCategory
-import engine.{AllCategory, Category, Statistics, Tracker}
+import engine.{Statistics, Tracker}
 
 import java.awt.Color
-import java.time.LocalDate
 import scala.collection.mutable.ListBuffer
 import scala.swing.{Dimension, GridPanel, Label, ListView}
 
-class StatPanel extends GridPanel(3, 2) {
+class StatPanel extends GridPanel(3, 2) with EntryPanel {
   background = new Color(0xd6e2e9)
   preferredSize = new Dimension(500, 900)
   private var balance = Tracker.getSum()
   private var expenseSum = Tracker.getSum(Tracker.expenses)
   private var incomeSum = Tracker.getSum(Tracker.incomes)
-
-  private var startDate = LocalDate.now()
-  private var endDate = LocalDate.now
 
   var expenseMap: Map[ExpenseCategory, BigDecimal] = Map()
   var expenseList: ListBuffer[String] = ListBuffer()
@@ -39,12 +34,9 @@ class StatPanel extends GridPanel(3, 2) {
   contents += new Label("Income statistics: ")
   contents += incomeListView
 
-  var categories: Set[AnyRef] = Set()
-
-  def updateStatistics(): Unit = {
+  def update(): Unit = {
     println("Update statistics")
-    if (!(categories contains All)) balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.getFromCategories(categories)))
-    else balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate))
+    balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.getFromCategories(categories)))
 
     expenseSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.expenses))
     incomeSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.incomes))
@@ -60,41 +52,19 @@ class StatPanel extends GridPanel(3, 2) {
   }
 
   def updateExpenseList(): Unit = {
-    expenseList.clear()
-    for ((k, v) <- expenseMap) {
-      val entry: String = v.toString + " (" + Statistics.getPercent(v, expenseSum) + "): " + k.toString
-      expenseList += entry
-    }
+    updateEntryList(expenseList, expenseMap, expenseSum)
   }
 
   def updateIncomeList(): Unit = {
-    incomeList.clear()
-    for ((k, v) <- incomeMap) {
-      val entry: String = v.toString + " (" + Statistics.getPercent(v, incomeSum) + "): " + k.toString
-      incomeList += entry
+    updateEntryList(incomeList, incomeMap, incomeSum)
+  }
+
+  def updateEntryList(list: ListBuffer[String], map: Map[_, BigDecimal], sum: BigDecimal): Unit = {
+    list.clear()
+    for ((k, v) <- map) {
+      val entry: String = v.toString + " (" + Statistics.getPercent(v, sum) + "): " + k.toString
+      list += entry
     }
-  }
-
-  def changeStartDate(date: String): Unit = {
-    startDate = LocalDate.parse(date)
-    updateStatistics()
-  }
-
-  def changeEndDate(date: String): Unit = {
-    endDate = LocalDate.parse(date)
-    updateStatistics()
-  }
-
-  def updateCategory(cat: AnyRef): Unit = {
-    if (categories contains cat) categories -= cat
-    else categories += cat
-
-    updateStatistics()
-  }
-
-  def setCategories(categories: Set[AnyRef]): Unit = {
-    this.categories = categories
-    updateStatistics()
   }
 }
 

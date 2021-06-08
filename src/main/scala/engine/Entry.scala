@@ -15,5 +15,6 @@ sealed trait Entry {
   override def toString: String = category.toString + "   " + amount.toString + "   " + date.toString
 }
 
-case class Expense(id: Int, amount: BigDecimal, date: LocalDate, category: ExpenseCategory, description: String=null) extends Entry
-case class Income(id: Int, amount: BigDecimal, date: LocalDate, category: IncomeCategory, description: String=null) extends Entry
+case class Expense(id: Int, amount: BigDecimal, date: LocalDate, category: ExpenseCategory, description: String = null) extends Entry
+
+case class Income(id: Int, amount: BigDecimal, date: LocalDate, category: IncomeCategory, description: String = null) extends Entry
