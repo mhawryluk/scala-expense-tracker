@@ -49,9 +49,7 @@ object Tracker {
     val from: LocalDate = LocalDate.parse(fromStr)
     val to: LocalDate = LocalDate.parse(toStr)
 
-    entries.filter(entry => entry.date.isAfter(from)
-      && entry.date.isBefore(to) || entry.date.isEqual(from)
-      || entry.date.isEqual(to))
+    getBetweenLocalDates(from, to, entries)
   }
 
   def getBetweenLocalDates(from: LocalDate, to: LocalDate, entries: List[Entry] = entries): List[Entry] = {

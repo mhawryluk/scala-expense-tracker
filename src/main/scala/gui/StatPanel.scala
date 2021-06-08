@@ -13,12 +13,12 @@ import scala.swing.{Dimension, GridPanel, Label, ListView}
 class StatPanel extends GridPanel(3, 2) {
   background = new Color(0xd6e2e9)
   preferredSize = new Dimension(500, 900)
-  var balance = Tracker.getSum()
-  var expenseSum = Tracker.getSum(Tracker.expenses)
-  var incomeSum = Tracker.getSum(Tracker.incomes)
+  private var balance = Tracker.getSum()
+  private var expenseSum = Tracker.getSum(Tracker.expenses)
+  private var incomeSum = Tracker.getSum(Tracker.incomes)
 
-  var startDate = LocalDate.of(2000, 1, 1)
-  var endDate = LocalDate.of(2021, 12, 30)
+  private var startDate = LocalDate.of(2000, 1, 1)
+  private var endDate = LocalDate.now
 
   var expenseMap: Map[ExpenseCategory, BigDecimal] = Map()
   var expenseList: ListBuffer[String] = ListBuffer()
@@ -39,11 +39,11 @@ class StatPanel extends GridPanel(3, 2) {
   contents += new Label("Income statistics: ")
   contents += incomeListView
 
-  var category: AnyRef = All
+  var categories: Set[AnyRef] = Set()
 
   def updateStatistics(): Unit = {
     println("Update statistics")
-    if (category!=All) balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.getFromCategories(Set(category))))
+    if (!(categories contains All)) balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.getFromCategories(categories)))
     else balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate))
 
     expenseSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.expenses))
@@ -86,10 +86,10 @@ class StatPanel extends GridPanel(3, 2) {
   }
 
   def updateCategory(cat: AnyRef): Unit = {
-    category = cat
+    if (categories contains cat) categories -= cat
+    else categories += cat
+
     updateStatistics()
   }
-
-
 }
 

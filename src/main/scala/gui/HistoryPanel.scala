@@ -1,19 +1,19 @@
 package gui
 
 import engine.AllCategory.All
-import engine.{Entry, Statistics, Tracker}
+import engine.{Entry, Tracker}
 
 import java.time.LocalDate
 import scala.collection.mutable
 import scala.collection.mutable.{ListBuffer, Map}
 import scala.swing.event.ButtonClicked
-import scala.swing.{BoxPanel, Button, CheckMenuItem, Color, Dimension, Label, Orientation}
+import scala.swing.{Alignment, BoxPanel, Button, CheckMenuItem, Color, Dimension, GridPanel, Label, Orientation, Table}
 
 class HistoryPanel extends BoxPanel(Orientation.Vertical) {
   preferredSize = new Dimension(300, 250)
   background = new Color(0xf0efeb)
 
-  var category: AnyRef = All
+  var categories: Set[AnyRef] = Set()
   var startDate: LocalDate = LocalDate.now()
   var endDate: LocalDate = LocalDate.now()
   var entries: List[Entry] = Tracker.getBetweenLocalDates(startDate, endDate)
@@ -28,10 +28,12 @@ class HistoryPanel extends BoxPanel(Orientation.Vertical) {
 
   def updateContents(): Unit = {
     contents.clear()
+    contents += deleteButton
     for (item <- checkItems) {
       contents += item
     }
-    contents += deleteButton
+    peer.revalidate()
+    peer.repaint()
   }
 
   def updateItems(): Unit = {
@@ -46,7 +48,7 @@ class HistoryPanel extends BoxPanel(Orientation.Vertical) {
   }
 
   def updateHistory(): Unit = {
-    if (category != All) entries = Tracker.getBetweenLocalDates(startDate, endDate, Tracker.getFromCategories(Set(category)))
+    if (!(categories contains All)) entries = Tracker.getBetweenLocalDates(startDate, endDate, Tracker.getFromCategories(categories))
     else entries = Tracker.getBetweenLocalDates(startDate, endDate)
     updateItems()
   }
@@ -74,7 +76,8 @@ class HistoryPanel extends BoxPanel(Orientation.Vertical) {
   }
 
   def updateCategory(cat: AnyRef): Unit = {
-    category = cat
+    if (categories contains cat) categories -= cat
+    else categories += cat
     updateHistory()
   }
 }

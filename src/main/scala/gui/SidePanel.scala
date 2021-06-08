@@ -3,7 +3,7 @@ package gui
 import engine.{AllCategory, ExpenseCategory, IncomeCategory}
 
 import java.time.LocalDate
-import scala.swing.event.SelectionChanged
+import scala.swing.event.{ButtonClicked, SelectionChanged}
 import scala.swing.{Button, CheckMenuItem, Color, ComboBox, Dimension, FlowPanel, GridPanel, Label}
 
 
@@ -33,13 +33,18 @@ class SidePanel extends FlowPanel {
 
 
   // choosing category boxes
-  private val categoryPairs: Seq[(String, CheckMenuItem)] = for (category <- IncomeCategory.values.toList concat ExpenseCategory.values.toList) yield (category.toString, new CheckMenuItem(category.toString))
+  private val categoryPairs: Seq[(String, CheckMenuItem)] =
+    for (category <- IncomeCategory.values.toList concat ExpenseCategory.values.toList)
+      yield (category.toString, new CheckMenuItem(category.toString){
+        listenTo(this)
+        reactions += {
+          case ButtonClicked(_) => MainWindow.selectCategory(category)
+        }
+      })
   val ChooseCategoryMap: Map[String, CheckMenuItem] = Map(categoryPairs :_*)
 
   contents += new GridPanel(categoryPairs.size, 1) {
-    for ((name, box) <- ChooseCategoryMap) {
-      contents += box
-    }
+    for ((name, box) <- ChooseCategoryMap) contents += box
   }
 
   // choosing tracking period
@@ -56,12 +61,8 @@ class SidePanel extends FlowPanel {
   contents += new Label("       to:       ")
   contents += untilDateBox
 
-  val categoryBox = new ComboBox(AllCategory.values.toList.concat(ExpenseCategory.values.toList).concat(IncomeCategory.values.toList))
-  contents += categoryBox
-
   listenTo(fromDateBox.selection)
   listenTo(untilDateBox.selection)
-  listenTo(categoryBox.selection)
 
   reactions += {
     case SelectionChanged(`fromDateBox`) =>
@@ -70,7 +71,6 @@ class SidePanel extends FlowPanel {
     case SelectionChanged(`untilDateBox`) =>
       checkValidDates()
       MainWindow.changeEndDate(untilDateBox.peer.getSelectedItem.toString)
-    case SelectionChanged(`categoryBox`) => MainWindow.changeCategory(categoryBox.peer.getSelectedItem)
   }
 
   def checkValidDates(): Unit = {
@@ -78,6 +78,5 @@ class SidePanel extends FlowPanel {
       fromDateBox.peer.setSelectedItem(untilDateBox.peer.getSelectedItem)
     }
   }
-
-  repaint()
+  peer.repaint()
 }

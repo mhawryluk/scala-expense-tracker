@@ -49,7 +49,7 @@ object MainWindow extends MainFrame{
     historyPanel.changeEndDate(date)
   }
 
-  def changeCategory(category: AnyRef): Unit ={
+  def selectCategory(category: AnyRef): Unit ={
     statPanel.updateCategory(category)
     historyPanel.updateCategory(category)
   }
