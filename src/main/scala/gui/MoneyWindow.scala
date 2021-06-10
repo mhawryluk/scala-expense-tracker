@@ -46,7 +46,7 @@ class MoneyWindow extends MainFrame {
         try {
           val date = LocalDate.parse(dateBox.peer.getSelectedItem.toString)
           val description = descriptionField.text
-          Tracker.addEntry(amount, category, date)
+          Tracker.addEntry(amount, category, date, description)
           MainWindow.updateEntries()
         }
         catch {

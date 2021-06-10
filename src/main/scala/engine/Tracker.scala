@@ -17,7 +17,7 @@ object Tracker {
   private var maxEntryId: Int = 0
   var budget: Int = -1
 
-  def addEntry(amount: String, category: AnyRef, date: Any = null, description: String = ""): Unit = {
+  def addEntry(amount: String, category: AnyRef, date: Any = null, description: String = "", signChange: Boolean = true): Unit = {
     var parsedDate: LocalDate = null
 
     date match {
@@ -28,7 +28,10 @@ object Tracker {
     }
 
     category match {
-      case cat: ExpenseCategory => expenses ::= Expense(maxEntryId, -BigDecimal(amount), parsedDate, cat, description)
+      case cat: ExpenseCategory => {
+        if(signChange) expenses ::= Expense(maxEntryId, -BigDecimal(amount), parsedDate, cat, description)
+        else expenses ::= Expense(maxEntryId, BigDecimal(amount), parsedDate, cat, description)
+      }
       case cat: IncomeCategory => incomes ::= Income(maxEntryId, BigDecimal(amount), parsedDate, cat, description)
       case _ => throw new IllegalArgumentException("wrong category type")
     }
@@ -80,7 +83,7 @@ object Tracker {
             case None => throw new IllegalArgumentException("no such category " + categoryString)
           }
         }
-        addEntry(amount, category, date, description)
+        addEntry(amount, category, date, description, signChange = false)
       }
     }
     finally file.close()

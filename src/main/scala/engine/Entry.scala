@@ -12,7 +12,7 @@ sealed trait Entry {
   def date: LocalDate
   def category: AnyRef
   def description: String
-  override def toString: String = category.toString + "   " + amount.toString + "   " + date.toString
+  override def toString: String = category.toString + "   " + amount.toString + "   " + date.toString + "   " + description
 }
 
 case class Expense(id: Int, amount: BigDecimal, date: LocalDate, category: ExpenseCategory, description: String = null) extends Entry
