@@ -3,7 +3,7 @@ package gui
 import engine.Tracker
 
 import java.awt.Toolkit
-import scala.swing.BorderPanel.Position.{Center, West}
+import scala.swing.BorderPanel.Position.{Center, East, West}
 import scala.swing._
 import scala.sys.exit
 
@@ -21,6 +21,7 @@ object MainWindow extends MainFrame {
   val sidePanel = new SidePanel
   val historyPanel = new HistoryPanel
   val statPanel = new StatPanel
+  val monthlyStatPanel = new MonthlyStats
 
   contents = new BorderPanel() {
     val mainPanel: GridPanel = new GridPanel(2, 1) {
@@ -28,7 +29,10 @@ object MainWindow extends MainFrame {
       contents += statPanel
     }
 
-    layout(sidePanel) = West
+    layout(new GridPanel(2, 1){
+      contents += sidePanel
+      contents += monthlyStatPanel
+    }) = West
     layout(mainPanel) = Center
   }
 

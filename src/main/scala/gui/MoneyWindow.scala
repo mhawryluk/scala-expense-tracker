@@ -16,6 +16,8 @@ class MoneyWindow extends MainFrame {
     }
   }
   textField.peer.setText("0")
+  peer.setLocationRelativeTo(null)
+
   val descriptionField: TextField = new TextField("")
   val beginDate: LocalDate = LocalDate.parse("2000-01-01")
   val lastDate1: LocalDate = LocalDate.now()
