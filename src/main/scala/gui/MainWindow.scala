@@ -11,7 +11,7 @@ object MainWindow extends MainFrame {
   title = "Expense tracker"
 
   private val width: Int = 1000
-  private val height: Int = 800
+  private val height: Int = 900
   preferredSize = new Dimension(width, height)
 
   private val screenWidth = Toolkit.getDefaultToolkit.getScreenSize.getWidth

@@ -6,3 +6,4 @@ scalaVersion := "2.13.6"
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
 libraryDependencies += "com.lihaoyi" %% "upickle" % "1.3.8"
+libraryDependencies += "org.jfree" % "jfreechart" % "1.0.14"

@@ -6,9 +6,9 @@ import engine.{Statistics, Tracker}
 
 import java.awt.Color
 import scala.collection.mutable.ListBuffer
-import scala.swing.{Dimension, GridPanel, Label, ListView}
+import scala.swing.{Button, Dimension, GridPanel, Label, ListView}
 
-class StatPanel extends GridPanel(3, 2) with EntryPanel {
+class StatPanel extends GridPanel(4, 2) with EntryPanel {
   background = new Color(0xd6e2e9)
   preferredSize = new Dimension(500, 900)
   private var balance = Tracker.getSum()
@@ -30,9 +30,22 @@ class StatPanel extends GridPanel(3, 2) with EntryPanel {
   contents += new Label("Balance: ")
   contents += balanceLabel
   contents += new Label("Expense statistics: ")
-  contents += expenseListView
   contents += new Label("Income statistics: ")
+  contents += expenseListView
   contents += incomeListView
+
+  contents += Button("Show expense chart") {
+    val pieChart = new PieChart()
+    pieChart.showExpenses(expenseMap)
+    pieChart.visible = true
+    pieChart.size = new Dimension(500, 500)
+  }
+  contents += Button("Show income chart") {
+    val pieChart = new PieChart()
+    pieChart.showIncomes(incomeMap)
+    pieChart.visible = true
+    pieChart.size = new Dimension(500, 500)
+  }
 
   def update(): Unit = {
     println("Update statistics")
