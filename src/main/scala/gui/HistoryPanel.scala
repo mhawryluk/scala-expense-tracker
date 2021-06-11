@@ -47,6 +47,8 @@ class HistoryPanel extends BoxPanel(Orientation.Vertical) with EntryPanel {
     updateItems()
   }
 
+  def getYear: Int = endDate.getYear
+
   def deleteChosen(): Unit = {
     println("delete chosen")
     for (item <- checkItems) {

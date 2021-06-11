@@ -48,7 +48,7 @@ class StatPanel extends GridPanel(4, 2) with EntryPanel {
   }
 
   def update(): Unit = {
-    println("Update statistics")
+//    println("Update statistics")
     balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.getFromCategories(categories)))
 
     expenseSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.expenses))

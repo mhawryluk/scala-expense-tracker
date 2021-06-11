@@ -49,6 +49,14 @@ object Tracker {
   def getFromCategories(categories: Set[AnyRef], entries: List[Entry] = entries): List[Entry] =
     entries.filter(entry => categories(entry.category))
 
+  def getIncomes(entries: List[Entry] = entries): List[Entry] = {
+    getFromCategories(IncomeCategory.values.toSet, entries)
+  }
+
+  def getExpenses(entries: List[Entry] = entries): List[Entry] = {
+    getFromCategories(ExpenseCategory.values.toSet, entries)
+  }
+
   def getBetweenDates(fromStr: String, toStr: String, entries: List[Entry] = entries): List[Entry] = {
     val from: LocalDate = LocalDate.parse(fromStr)
     val to: LocalDate = LocalDate.parse(toStr)
