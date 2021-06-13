@@ -53,7 +53,7 @@ object MainWindow extends MainFrame {
   def changeEndDate(date: String): Unit = {
     statPanel.changeEndDate(date)
     historyPanel.changeEndDate(date)
-    monthlyStatPanel.createChart(historyPanel.getYear())
+    monthlyStatPanel.createChart(historyPanel.getYear)
   }
 
   def selectCategory(category: AnyRef): Unit = {
@@ -69,6 +69,6 @@ object MainWindow extends MainFrame {
   def updateEntries(): Unit = {
     statPanel.update()
     historyPanel.update()
-    monthlyStatPanel.createChart(historyPanel.getYear())
+    monthlyStatPanel.createChart(historyPanel.getYear)
   }
 }

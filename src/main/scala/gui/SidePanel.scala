@@ -14,7 +14,7 @@ class SidePanel extends FlowPanel {
   background = new Color(0x99c1de)
 
   // adding entries buttons
-  contents += new GridPanel(2, 1) {
+  contents += new GridPanel(0, 2) {
     contents += Button("Add expense") {
       println("adding  expense")
       val window = new ExpenseWindow
@@ -44,13 +44,21 @@ class SidePanel extends FlowPanel {
     for ((_, box) <- ChooseCategoryMap) contents += box
   }
 
-  contents += new GridPanel(4, 0) {
+  contents += new GridPanel(2, 2) {
     contents += Button("All entries") {
       MainWindow.setCategories((ExpenseCategory.values concat IncomeCategory.values).toSet)
       for ((_, box) <- categoryBoxes) {
         box.selected = true
       }
     }
+
+    contents += Button("Clear entries") {
+      MainWindow.setCategories(Set())
+      for ((_, box) <- categoryBoxes) {
+        box.selected = false
+      }
+    }
+
     contents += Button("All incomes") {
       MainWindow.setCategories(IncomeCategory.values.toSet)
       for ((category, box) <- categoryBoxes) {
@@ -69,12 +77,7 @@ class SidePanel extends FlowPanel {
         }
       }
     }
-    contents += Button("Clear entries") {
-      MainWindow.setCategories(Set())
-      for ((_, box) <- categoryBoxes) {
-        box.selected = false
-      }
-    }
+
   }
 
   // choosing tracking period
@@ -95,6 +98,24 @@ class SidePanel extends FlowPanel {
     contents += untilDateBox
   }
 
+  contents += new GridPanel(3,0){
+    contents += Button("Show last year"){
+      untilDateBox.peer.setSelectedItem(LocalDate.now())
+      fromDateBox.peer.setSelectedItem(LocalDate.now().minusYears(1))
+      changeDates()
+    }
+    contents += Button("Show last month"){
+      untilDateBox.peer.setSelectedItem(LocalDate.now())
+      fromDateBox.peer.setSelectedItem(LocalDate.now().minusMonths(1))
+      changeDates()
+    }
+    contents += Button("Show last week"){
+      untilDateBox.peer.setSelectedItem(LocalDate.now())
+      fromDateBox.peer.setSelectedItem(LocalDate.now().minusWeeks(1))
+      changeDates()
+    }
+  }
+
   listenTo(fromDateBox.selection)
   listenTo(untilDateBox.selection)
 
@@ -105,6 +126,11 @@ class SidePanel extends FlowPanel {
     case SelectionChanged(`untilDateBox`) =>
       checkValidDates()
       MainWindow.changeEndDate(untilDateBox.peer.getSelectedItem.toString)
+  }
+
+  def changeDates(): Unit ={
+    MainWindow.changeStartDate(fromDateBox.peer.getSelectedItem.toString)
+    MainWindow.changeEndDate(untilDateBox.peer.getSelectedItem.toString)
   }
 
   def checkValidDates(): Unit = {
