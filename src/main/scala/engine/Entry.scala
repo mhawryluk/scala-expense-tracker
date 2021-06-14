@@ -16,5 +16,4 @@ sealed trait Entry {
 }
 
 case class Expense(id: Int, amount: BigDecimal, date: LocalDate, category: ExpenseCategory, description: String = null) extends Entry
-
 case class Income(id: Int, amount: BigDecimal, date: LocalDate, category: IncomeCategory, description: String = null) extends Entry

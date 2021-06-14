@@ -5,23 +5,23 @@ import org.jfree.chart.plot.PlotOrientation
 import org.jfree.chart.{ChartFactory, ChartPanel, JFreeChart}
 import org.jfree.data.category.DefaultCategoryDataset
 
-import java.time.{LocalDate, Month}
+import java.time.LocalDate
 import scala.swing.{Dimension, GridPanel}
 
-class MonthlyStats extends GridPanel(1,1){
+class MonthlyStats extends GridPanel(1, 1) {
 
   preferredSize = new Dimension(250, 400)
-  createChart(LocalDate.now.getYear)
+  apply(LocalDate.now.getYear)
 
-  def createChart(year: Int): Unit = {
+  def apply(year: Int): Unit = {
     val dataset = new DefaultCategoryDataset
 
-    for (monthNum <- 1 to 12){
+    for (monthNum <- 1 to 12) {
       val startDate = LocalDate.of(year, monthNum, 1)
       val endDate = startDate.withDayOfMonth(startDate.lengthOfMonth)
-      val month: String= startDate.getMonth.toString
+      val month: String = startDate.getMonth.toString
 
-      val entries = Tracker.getBetweenLocalDates(startDate, endDate)
+      val entries = Tracker.getBetweenLocalDates(startDate, endDate)()
 
       val incomeSum = Tracker.getSum(Tracker.getIncomes(entries))
       dataset.addValue(incomeSum, "incomes", month)

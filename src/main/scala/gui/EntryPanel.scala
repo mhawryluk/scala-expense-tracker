@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 trait EntryPanel {
 
-  var categories: Set[AnyRef] = Set()
+  protected var categories: Set[AnyRef] = Set()
   protected var startDate: LocalDate = LocalDate.now
   protected var endDate: LocalDate = LocalDate.now
 

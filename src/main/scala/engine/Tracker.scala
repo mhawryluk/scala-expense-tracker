@@ -10,12 +10,11 @@ object Tracker {
   var expenses: List[Expense] = List[Expense]()
   var incomes: List[Income] = List[Income]()
 
-  def entries: List[Entry] = List.concat(expenses, incomes).sortBy(entry => entry.date)
+  def entries: List[Entry] = List.concat(expenses, incomes).sortBy(_.date)
 
-  val fileName = "data/entries2.json"
+  private val fileName = "data/entries2.json"
 
   private var maxEntryId: Int = 0
-  var budget: Int = -1
 
   def addEntry(amount: String, category: AnyRef, date: Any = null, description: String = "", signChange: Boolean = true): Unit = {
     var parsedDate: LocalDate = null
@@ -28,10 +27,10 @@ object Tracker {
     }
 
     category match {
-      case cat: ExpenseCategory => {
+      case cat: ExpenseCategory =>
         if(signChange) expenses ::= Expense(maxEntryId, -BigDecimal(amount), parsedDate, cat, description)
         else expenses ::= Expense(maxEntryId, BigDecimal(amount), parsedDate, cat, description)
-      }
+
       case cat: IncomeCategory => incomes ::= Income(maxEntryId, BigDecimal(amount), parsedDate, cat, description)
       case _ => throw new IllegalArgumentException("wrong category type")
     }
@@ -46,25 +45,23 @@ object Tracker {
   def getSum(entries: List[Entry] = entries): BigDecimal =
     entries.foldLeft(BigDecimal("0"))(_ + _.amount)
 
-  def getFromCategories(categories: Set[AnyRef], entries: List[Entry] = entries): List[Entry] =
+  def getFromCategories(categories: Set[AnyRef])(entries: List[Entry] = entries): List[Entry] =
     entries.filter(entry => categories(entry.category))
 
-  def getIncomes(entries: List[Entry] = entries): List[Entry] = {
-    getFromCategories(IncomeCategory.values.toSet, entries)
-  }
+  def getIncomes(entries: List[Entry] = entries): List[Entry] =
+    getFromCategories(IncomeCategory.values.toSet)(entries)
 
-  def getExpenses(entries: List[Entry] = entries): List[Entry] = {
-    getFromCategories(ExpenseCategory.values.toSet, entries)
-  }
+  def getExpenses(entries: List[Entry] = entries): List[Entry] =
+    getFromCategories(ExpenseCategory.values.toSet)(entries)
 
-  def getBetweenDates(fromStr: String, toStr: String, entries: List[Entry] = entries): List[Entry] = {
+  def getBetweenDates(fromStr: String, toStr: String)(entries: List[Entry] = entries): List[Entry] = {
     val from: LocalDate = LocalDate.parse(fromStr)
     val to: LocalDate = LocalDate.parse(toStr)
 
-    getBetweenLocalDates(from, to, entries)
+    getBetweenLocalDates(from, to)(entries)
   }
 
-  def getBetweenLocalDates(from: LocalDate, to: LocalDate, entries: List[Entry] = entries): List[Entry] = {
+  def getBetweenLocalDates(from: LocalDate, to: LocalDate)(entries: List[Entry] = entries): List[Entry] = {
     entries.filter(entry => entry.date.isAfter(from)
       && entry.date.isBefore(to) || entry.date.isEqual(from)
       || entry.date.isEqual(to))
@@ -91,7 +88,7 @@ object Tracker {
             case None => throw new IllegalArgumentException("no such category " + categoryString)
           }
         }
-        addEntry(amount, category, date, description, signChange = false)
+        addEntry(amount, category, date, description, signChange=false)
       }
     }
     finally file.close()

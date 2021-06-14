@@ -15,30 +15,29 @@ object Statistics {
 
   def mapExpenses(from: LocalDate, to: LocalDate): ListMap[ExpenseCategory, BigDecimal] = {
     val map = collection.mutable.Map[ExpenseCategory, BigDecimal]()
-    val entries = Tracker.getBetweenLocalDates(from, to)
-    for (category <- ExpenseCategory.values) {
-      map += (category -> Tracker.getSum(Tracker.getFromCategories(Set(category), entries)))
-    }
+    val entries = Tracker.getBetweenLocalDates(from, to)()
+    ExpenseCategory.values.foreach(
+      category => map += (category -> Tracker.getSum(Tracker.getFromCategories(Set(category))(entries)))
+    )
     ListMap(map.toSeq.sortWith(_._2 < _._2): _*)
   }
 
   def mapIncomes(from: LocalDate, to: LocalDate): ListMap[IncomeCategory, BigDecimal] = {
     val map = collection.mutable.Map[IncomeCategory, BigDecimal]()
-    val entries = Tracker.getBetweenLocalDates(from, to)
-    for (category <- IncomeCategory.values) {
-      map += (category -> Tracker.getSum(Tracker.getFromCategories(Set(category), entries)))
-    }
-    ListMap(map.toSeq.sortWith(_._2 < _._2): _*)
+    val entries = Tracker.getBetweenLocalDates(from, to)()
+    IncomeCategory.values.foreach(
+      category => map += (category -> Tracker.getSum(Tracker.getFromCategories(Set(category))(entries)))
+    )
+    ListMap(map.toSeq.sortWith(_._2 > _._2): _*)
   }
 
-  def getMenuItems(from: LocalDate, to: LocalDate): List[String] = {
-    val entries = Tracker.getBetweenLocalDates(from, to)
-    val menuList: ListBuffer[String] = ListBuffer()
-    for (entry <- entries) {
-      val value: String = entry.category.toString + "  " + entry.amount.toString + "  " + entry.date.toString
-      menuList += value
-    }
-    menuList.toList
-  }
-
+//  def getMenuItems(from: LocalDate, to: LocalDate): List[String] = {
+//    val entries = Tracker.getBetweenLocalDates(from, to)
+//    val menuList: ListBuffer[String] = ListBuffer()
+//    for (entry <- entries) {
+//      val value: String = entry.category.toString + "  " + entry.amount.toString + "  " + entry.date.toString
+//      menuList += value
+//    }
+//    menuList.toList
+//  }
 }

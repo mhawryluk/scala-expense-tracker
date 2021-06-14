@@ -11,7 +11,7 @@ import scala.swing._
 
 class SidePanel extends FlowPanel {
   preferredSize = new Dimension(300, 400)
-  background = new Color(0x0288D1)
+  background = new Color(0x375978)
 
   // adding entries buttons
   contents += new GridPanel(0, 2) {

@@ -18,14 +18,14 @@ class MoneyWindow extends MainFrame {
   textField.peer.setText("0")
   peer.setLocationRelativeTo(null)
 
-  val descriptionField: TextField = new TextField("")
-  val beginDate: LocalDate = LocalDate.parse("2000-01-01")
-  val lastDate1: LocalDate = LocalDate.now()
-  val allDates: Array[AnyRef] = beginDate.datesUntil(lastDate1.plusDays(1)).toArray.reverse
-  val dateBox = new ComboBox(allDates)
+  private val descriptionField: TextField = new TextField("")
+  private val beginDate: LocalDate = LocalDate.parse("2000-01-01")
+  private val lastDate1: LocalDate = LocalDate.now()
+  private val allDates: Array[AnyRef] = beginDate.datesUntil(lastDate1.plusDays(1)).toArray.reverse
+  private val dateBox = new ComboBox(allDates)
   val categoryBox: ComboBox[AnyRef] = new ComboBox(List(""))
 
-  val cancelButton = Button("Cancel") {
+  private val cancelButton: Button = Button("Cancel") {
     println("Cancelling")
     close()
   }
@@ -34,12 +34,16 @@ class MoneyWindow extends MainFrame {
     contents = new GridPanel(5, 2) {
       contents += new Label("Enter amount: ")
       contents += textField
+
       contents += new Label("Choose category: ")
       contents += catBox
+
       contents += new Label("Choose date: ")
       contents += dateBox
+
       contents += new Label("Enter description")
       contents += descriptionField
+
       contents += cancelButton
       contents += Button("Accept and close") {
         val amount = textField.text

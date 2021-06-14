@@ -9,23 +9,23 @@ import scala.collection.mutable.ListBuffer
 import scala.swing.{Button, Dimension, GridPanel, Label, ListView}
 
 class StatPanel extends GridPanel(4, 2) with EntryPanel {
-  background = new Color(0xB3E5FC)
+  background = new Color(0xA5C8E8)
   preferredSize = new Dimension(500, 900)
   private var balance = Tracker.getSum()
   private var expenseSum = Tracker.getSum(Tracker.expenses)
   private var incomeSum = Tracker.getSum(Tracker.incomes)
 
-  var expenseMap: Map[ExpenseCategory, BigDecimal] = Map()
-  var expenseList: ListBuffer[String] = ListBuffer()
-  var expenseListView = new ListView[String]()
+  private var expenseMap: Map[ExpenseCategory, BigDecimal] = Map()
+  private val expenseList: ListBuffer[String] = ListBuffer()
+  private val expenseListView = new ListView[String]()
   expenseListView.background = background
 
-  var incomeMap: Map[IncomeCategory, BigDecimal] = Map()
-  var incomeList: ListBuffer[String] = ListBuffer()
-  var incomeListView = new ListView[String]()
+  private var incomeMap: Map[IncomeCategory, BigDecimal] = Map()
+  private val incomeList: ListBuffer[String] = ListBuffer()
+  private val incomeListView = new ListView[String]()
   incomeListView.background = background
 
-  val balanceLabel = new Label(balance.toString())
+  private val balanceLabel = new Label(balance.toString())
 
   contents += new Label("Balance: ")
   contents += balanceLabel
@@ -48,11 +48,10 @@ class StatPanel extends GridPanel(4, 2) with EntryPanel {
   }
 
   def update(): Unit = {
-//    println("Update statistics")
-    balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.getFromCategories(categories)))
+    balance = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate)(Tracker.getFromCategories(categories)()))
 
-    expenseSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.expenses))
-    incomeSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate, Tracker.incomes))
+    expenseSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate)(Tracker.expenses))
+    incomeSum = Tracker.getSum(Tracker.getBetweenLocalDates(startDate, endDate)(Tracker.incomes))
     balanceLabel.text = balance.toString
 
     expenseMap = Statistics.mapExpenses(startDate, endDate)
@@ -64,14 +63,6 @@ class StatPanel extends GridPanel(4, 2) with EntryPanel {
     incomeListView.listData = incomeList
   }
 
-  def updateExpenseList(): Unit = {
-    updateEntryList(expenseList, expenseMap, expenseSum)
-  }
-
-  def updateIncomeList(): Unit = {
-    updateEntryList(incomeList, incomeMap, incomeSum)
-  }
-
   def updateEntryList(list: ListBuffer[String], map: Map[_, BigDecimal], sum: BigDecimal): Unit = {
     list.clear()
     for ((k, v) <- map) {
@@ -79,5 +70,8 @@ class StatPanel extends GridPanel(4, 2) with EntryPanel {
       list += entry
     }
   }
+
+  def updateExpenseList(): Unit = updateEntryList(expenseList, expenseMap, expenseSum)
+  def updateIncomeList(): Unit = updateEntryList(incomeList, incomeMap, incomeSum)
 }
 

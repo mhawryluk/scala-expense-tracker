@@ -5,19 +5,16 @@ import engine.Tracker
 import java.awt.Toolkit
 import java.awt.Font
 import javax.swing.UIManager
-import scala.swing.BorderPanel.Position.{Center, East, West}
+import scala.swing.BorderPanel.Position.{Center, West}
 import scala.swing._
 import scala.sys.exit
 
 object MainWindow extends MainFrame {
   title = "Expense tracker"
 
-  font = new Font(Font.SANS_SERIF, Font.BOLD,  14);
-  UIManager.put("List.font", font)
-  UIManager.put("Label.font", font)
-  UIManager.put("CheckBoxMenuItem.font", font)
-  UIManager.put("Button.font", font)
-  UIManager.put("ComboBox.font", font)
+  font = new Font(Font.SANS_SERIF, Font.BOLD,  14)
+  List("List", "Label", "CheckBoxMenuItem", "Button", "Combobox")
+    .foreach(element => UIManager.put(element + ".font", font))
 
   private val width: Int = 1200
   private val height: Int = 1000
@@ -48,7 +45,6 @@ object MainWindow extends MainFrame {
   updateEntries()
 
   override def closeOperation(): Unit = {
-    println("close")
     Tracker.saveToJson()
     dispose()
     exit(0)
@@ -62,7 +58,7 @@ object MainWindow extends MainFrame {
   def changeEndDate(date: String): Unit = {
     statPanel.changeEndDate(date)
     historyPanel.changeEndDate(date)
-    monthlyStatPanel.createChart(historyPanel.getYear)
+    monthlyStatPanel(historyPanel.getYear)
   }
 
   def selectCategory(category: AnyRef): Unit = {
@@ -78,6 +74,6 @@ object MainWindow extends MainFrame {
   def updateEntries(): Unit = {
     statPanel.update()
     historyPanel.update()
-    monthlyStatPanel.createChart(historyPanel.getYear)
+    monthlyStatPanel(historyPanel.getYear)
   }
 }
