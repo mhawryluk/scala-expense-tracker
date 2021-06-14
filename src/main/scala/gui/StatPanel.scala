@@ -9,7 +9,7 @@ import scala.collection.mutable.ListBuffer
 import scala.swing.{Button, Dimension, GridPanel, Label, ListView}
 
 class StatPanel extends GridPanel(4, 2) with EntryPanel {
-  background = new Color(0xd6e2e9)
+  background = new Color(0xB3E5FC)
   preferredSize = new Dimension(500, 900)
   private var balance = Tracker.getSum()
   private var expenseSum = Tracker.getSum(Tracker.expenses)
@@ -18,12 +18,12 @@ class StatPanel extends GridPanel(4, 2) with EntryPanel {
   var expenseMap: Map[ExpenseCategory, BigDecimal] = Map()
   var expenseList: ListBuffer[String] = ListBuffer()
   var expenseListView = new ListView[String]()
-  expenseListView.background = new Color(0xd6e2e9)
+  expenseListView.background = background
 
   var incomeMap: Map[IncomeCategory, BigDecimal] = Map()
   var incomeList: ListBuffer[String] = ListBuffer()
   var incomeListView = new ListView[String]()
-  incomeListView.background = new Color(0xd6e2e9)
+  incomeListView.background = background
 
   val balanceLabel = new Label(balance.toString())
 

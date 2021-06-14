@@ -3,6 +3,8 @@ package gui
 import engine.Tracker
 
 import java.awt.Toolkit
+import java.awt.Font
+import javax.swing.UIManager
 import scala.swing.BorderPanel.Position.{Center, East, West}
 import scala.swing._
 import scala.sys.exit
@@ -10,8 +12,15 @@ import scala.sys.exit
 object MainWindow extends MainFrame {
   title = "Expense tracker"
 
-  private val width: Int = 1000
-  private val height: Int = 900
+  font = new Font(Font.SANS_SERIF, Font.BOLD,  14);
+  UIManager.put("List.font", font)
+  UIManager.put("Label.font", font)
+  UIManager.put("CheckBoxMenuItem.font", font)
+  UIManager.put("Button.font", font)
+  UIManager.put("ComboBox.font", font)
+
+  private val width: Int = 1200
+  private val height: Int = 1000
   preferredSize = new Dimension(width, height)
 
   private val screenWidth = Toolkit.getDefaultToolkit.getScreenSize.getWidth
