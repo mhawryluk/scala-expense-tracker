@@ -50,10 +50,8 @@ class HistoryPanel extends BoxPanel(Orientation.Vertical) with EntryPanel {
   def getYear: Int = endDate.getYear
 
   def deleteChosen(): Unit = {
-    println("delete chosen")
     checkItems.foreach(item =>
       if (item.selected) {
-        println("item.selected")
         val id = entryMap.getOrElse(item, -1)
         Tracker.removeEntry(id)
       }
