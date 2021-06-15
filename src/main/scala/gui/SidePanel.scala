@@ -37,13 +37,14 @@ class SidePanel extends FlowPanel {
         }
       })
 
+
   val ChooseCategoryMap: Map[AnyRef, CheckMenuItem] = Map(categoryBoxes: _*)
 
-  // entry type buttons
   contents += new GridPanel(categoryBoxes.size, 1) {
     for ((_, box) <- ChooseCategoryMap) contents += box
   }
 
+  // entry type buttons
   contents += new GridPanel(2, 2) {
     contents += Button("All entries") {
       MainWindow.setCategories((ExpenseCategory.values concat IncomeCategory.values).toSet)

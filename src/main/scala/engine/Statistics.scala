@@ -16,7 +16,7 @@ object Statistics {
     val map = collection.mutable.Map[ExpenseCategory, BigDecimal]()
     val entries = Tracker.getBetweenLocalDates(from, to)()
     ExpenseCategory.values.foreach(
-      category => map += (category -> Tracker.getSum(Tracker.getFromCategories(Set(category))(entries)))
+      category => map += (category -> (Tracker.getSum _ compose (Tracker.getFromCategories(Set(category))(_)))(entries))
     )
     ListMap(map.toSeq.sortWith(_._2 < _._2): _*)
   }

@@ -42,6 +42,7 @@ object MainWindow extends MainFrame {
     layout(mainPanel) = Center
   }
 
+  private val entryPanels = List(statPanel, historyPanel)
   updateEntries()
 
   override def closeOperation(): Unit = {
@@ -50,30 +51,19 @@ object MainWindow extends MainFrame {
     exit(0)
   }
 
-  def changeStartDate(date: String): Unit = {
-    statPanel.changeStartDate(date)
-    historyPanel.changeStartDate(date)
-  }
+  def changeStartDate(date: String): Unit = entryPanels.foreach(_.changeStartDate(date))
 
   def changeEndDate(date: String): Unit = {
-    statPanel.changeEndDate(date)
-    historyPanel.changeEndDate(date)
+    entryPanels.foreach(_.changeEndDate(date))
     monthlyStatPanel(historyPanel.getYear)
   }
 
-  def selectCategory(category: AnyRef): Unit = {
-    statPanel.updateCategory(category)
-    historyPanel.updateCategory(category)
-  }
+  def selectCategory(category: AnyRef): Unit = entryPanels.foreach(_.updateCategory(category))
 
-  def setCategories(categories: Set[AnyRef]): Unit = {
-    historyPanel.setCategories(categories)
-    statPanel.setCategories(categories)
-  }
+  def setCategories(categories: Set[AnyRef]): Unit =  entryPanels.foreach(_.setCategories(categories))
 
   def updateEntries(): Unit = {
-    statPanel.update()
-    historyPanel.update()
+    entryPanels.foreach(_.update())
     monthlyStatPanel(historyPanel.getYear)
   }
 }

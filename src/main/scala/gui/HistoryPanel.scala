@@ -9,7 +9,6 @@ import scala.swing.event.ButtonClicked
 
 class HistoryPanel extends BoxPanel(Orientation.Vertical) with EntryPanel {
   preferredSize = new Dimension(300, 250)
-  //  background = new Color(0xffffff)
 
   private var entries: List[Entry] = Tracker.getBetweenLocalDates(startDate, endDate)()
   private val entryMap: mutable.Map[CheckMenuItem, Int] = mutable.Map()

@@ -42,9 +42,5 @@ Pie charts for statistics:
 ![Zrzut ekranu z 2021-06-15 12-52-20](https://user-images.githubusercontent.com/57232206/122041180-f90de700-cdd8-11eb-95ae-7b9255645bb5.png)
 
 
-
-
-
-
-
 ## Credits
+Created by: [@mhawryluk](https://www.github.com/mhawryluk) and [@anetaporebska](https://www.github.com/anetaporebska)
