@@ -30,14 +30,4 @@ object Statistics {
     )
     ListMap(map.toSeq.sortWith(_._2 > _._2): _*)
   }
-
-//  def getMenuItems(from: LocalDate, to: LocalDate): List[String] = {
-//    val entries = Tracker.getBetweenLocalDates(from, to)
-//    val menuList: ListBuffer[String] = ListBuffer()
-//    for (entry <- entries) {
-//      val value: String = entry.category.toString + "  " + entry.amount.toString + "  " + entry.date.toString
-//      menuList += value
-//    }
-//    menuList.toList
-//  }
 }
