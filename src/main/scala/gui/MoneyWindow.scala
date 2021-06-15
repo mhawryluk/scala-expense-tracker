@@ -7,7 +7,7 @@ import scala.swing.event.KeyTyped
 import scala.swing._
 
 
-class MoneyWindow extends MainFrame {
+sealed class MoneyWindow extends MainFrame {
   preferredSize = new Dimension(400, 320)
   val textField: TextField = new TextField {
     listenTo(keys)
@@ -26,7 +26,6 @@ class MoneyWindow extends MainFrame {
   val categoryBox: ComboBox[AnyRef] = new ComboBox(List(""))
 
   private val cancelButton: Button = Button("Cancel") {
-    println("Cancelling")
     close()
   }
 
